@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="jbig2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/extrlib/jbig2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

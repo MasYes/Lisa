@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="iscwt">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/extrlib/iscwt.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
