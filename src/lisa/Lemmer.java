@@ -15,16 +15,23 @@ package lisa;
  * И почему-то ИНТЕГРАЛУ и ИНТИГРАЛУ обрабатывается примерно за равное время 0о
  */
 public class Lemmer implements Runnable{
-	private static String word;
-	private static String workString;
-	private static String res;
-	public static String lemmatization(String str){
-		res = "";
-		word = str;
-		workString = str;
+
+	private String[] words;
+	private int num;
+
+	private Lemmer(String[] str, int i){
+		words = str;
+		num = i;
+	}
+
+	public static String[] lemmer(String str){
+		return lemmatization((str.toUpperCase()).split(" "));
+	}
+
+	private static String[] lemmatization(String[] str){
 		Thread[] threads = new Thread[Common.countThreads];
 		for(int i = 0; i < Common.countThreads;i++){
-			threads[i] = new Thread(new Lemmer());
+			threads[i] = new Thread(new Lemmer(str, i));
 			threads[i].start();
 		}
 		try{
@@ -34,36 +41,32 @@ public class Lemmer implements Runnable{
 		}catch(InterruptedException e){
 			Common.createLog(e);
 		}
-		return res;
-	}
-
-	private synchronized String getWork(){
-		if(workString.length() > 0){
-			String work = workString;
-			workString = workString.substring(0, workString.length() - 1);
-			return work;
-		}
-		return null;
-	}
-
-	private synchronized void setRes(String str){
-		res = str;
+		return str;
 	}
 
 	public void run(){
-		String work = getWork();
-		while(work != null && res.equals("")){
-			String end = SQLQuery.getEnd(work);
-			if(end != null){
-				String[] ends = end.split(" ");
-				for(int i  = 0; i < ends.length && res.equals(""); i++){
-					String str = SQLQuery.getEnd(Integer.parseInt(ends[i]));
-					if(str.contains(word.substring(work.length()))){
-						setRes(work + str.substring(1, str.indexOf("%", 1)));
+		int curr = num;
+		while(curr < words.length){
+			String word = words[curr];
+			String work = words[curr];
+			words[curr] = "";
+			while(!work.equals("")){
+				String end = SQLQuery.getEnd(work);
+				if(end != null){
+					String[] ends = end.split(" ");
+					for(int i  = 0; i < ends.length && !work.equals(""); i++){
+						String str = SQLQuery.getEnd(Integer.parseInt(ends[i]));
+						if(str.contains(word.substring(work.length()))){
+							System.out.println(work);
+							words[curr] = work + str.substring(1, str.indexOf("%", 1));
+							work = "";
+						}
 					}
 				}
+				if(work.length() > 0)
+					work = work.substring(0, work.length() - 1);
 			}
-			work = getWork();
+			curr += Common.countThreads;
 		}
 
 	}
