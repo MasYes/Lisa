@@ -14,9 +14,10 @@ import java.util.Date;
  */
 public class Common {
 	private Common(){}
-	protected static final int countThreads = 1;
+	protected final static int countThreads = 1;
 
-	protected static void createLog(Exception e){
+	public static void createLog(Exception e){
+		System.out.println("LOG");
 		String log = "";
 		for(StackTraceElement elem : e.getStackTrace()){
 			log += elem.toString() + "\n";

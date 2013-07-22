@@ -5,20 +5,24 @@
     <ignored path="Lisa.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/ArticleInterface.java" changelist="ff102f06-aa2c-4c34-8c0d-fbe3ec5c9be6" time="1373664945204" ignored="false" />
-    <file path="/ArticleCPS.java" changelist="ff102f06-aa2c-4c34-8c0d-fbe3ec5c9be6" time="1373722690212" ignored="false" />
-    <file path="/ArticleAbstract.java" changelist="ff102f06-aa2c-4c34-8c0d-fbe3ec5c9be6" time="1373924654071" ignored="false" />
+    <file path="/ArticleCPS.java" changelist="ff102f06-aa2c-4c34-8c0d-fbe3ec5c9be6" time="1374421519655" ignored="false" />
+    <file path="/ArticleAbstract.java" changelist="ff102f06-aa2c-4c34-8c0d-fbe3ec5c9be6" time="1374171970729" ignored="false" />
     <file path="/TemplateStyle.java" changelist="ff102f06-aa2c-4c34-8c0d-fbe3ec5c9be6" time="1373665724398" ignored="false" />
     <file path="/Keywords.java" changelist="ff102f06-aa2c-4c34-8c0d-fbe3ec5c9be6" time="1373645680782" ignored="false" />
     <file path="/Vector.java" changelist="ff102f06-aa2c-4c34-8c0d-fbe3ec5c9be6" time="1373717993062" ignored="false" />
     <file path="/a.dummy" changelist="ff102f06-aa2c-4c34-8c0d-fbe3ec5c9be6" time="1373663060586" ignored="false" />
-    <file path="/Main.java" changelist="ff102f06-aa2c-4c34-8c0d-fbe3ec5c9be6" time="1374087526103" ignored="false" />
-    <file path="/SQLQuery.java" changelist="ff102f06-aa2c-4c34-8c0d-fbe3ec5c9be6" time="1373982768525" ignored="false" />
+    <file path="/Main.java" changelist="ff102f06-aa2c-4c34-8c0d-fbe3ec5c9be6" time="1374508944897" ignored="false" />
+    <file path="/SQLQuery.java" changelist="ff102f06-aa2c-4c34-8c0d-fbe3ec5c9be6" time="1374514431196" ignored="false" />
     <file path="/Language.java" changelist="ff102f06-aa2c-4c34-8c0d-fbe3ec5c9be6" time="1373864275836" ignored="false" />
-    <file path="/Common.java" changelist="ff102f06-aa2c-4c34-8c0d-fbe3ec5c9be6" time="1373982779335" ignored="false" />
-    <file path="/Lemmer.java" changelist="ff102f06-aa2c-4c34-8c0d-fbe3ec5c9be6" time="1374087586438" ignored="false" />
+    <file path="/Common.java" changelist="ff102f06-aa2c-4c34-8c0d-fbe3ec5c9be6" time="1374422221664" ignored="false" />
+    <file path="/Lemmer.java" changelist="ff102f06-aa2c-4c34-8c0d-fbe3ec5c9be6" time="1374509965171" ignored="false" />
     <file path="/PDFParser.java" changelist="ff102f06-aa2c-4c34-8c0d-fbe3ec5c9be6" time="1373988200353" ignored="false" />
     <file path="/TEST.java" changelist="ff102f06-aa2c-4c34-8c0d-fbe3ec5c9be6" time="1373987832108" ignored="false" />
     <file path="/ExtractText.java" changelist="ff102f06-aa2c-4c34-8c0d-fbe3ec5c9be6" time="1374082634918" ignored="false" />
+    <file path="/Dictionary.java" changelist="ff102f06-aa2c-4c34-8c0d-fbe3ec5c9be6" time="1374503770527" ignored="false" />
+    <file path="$PROJECT_DIR$/../Test/src/Main.java" changelist="ff102f06-aa2c-4c34-8c0d-fbe3ec5c9be6" time="1374507800754" ignored="false" />
+    <file path="$PROJECT_DIR$/../Test/src/Omg.java" changelist="ff102f06-aa2c-4c34-8c0d-fbe3ec5c9be6" time="1374508001491" ignored="false" />
+    <file path="/Omg.java" changelist="ff102f06-aa2c-4c34-8c0d-fbe3ec5c9be6" time="1374507988539" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,7 +37,6 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
-    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -70,6 +73,8 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
+    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
+    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_rules />
     <ui_properties />
   </component>
@@ -79,44 +84,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Common.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/lisa/Common.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="31" column="9" selection-start="847" selection-end="847" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="Main.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="28" column="0" selection-start="895" selection-end="895" vertical-scroll-proportion="0.6666667">
-              <folding />
+            <state line="33" column="38" selection-start="753" selection-end="753" vertical-scroll-proportion="0.30427048">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="logs.txt" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/logs.txt">
-          <provider selected="true" editor-type-id="LargeFileEditor">
-            <state />
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Lemmer.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/lisa/Lemmer.java">
+      <file leaf-file-name="Common.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/lisa/Common.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="54" column="32" selection-start="1776" selection-end="1776" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ExtractText.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/lisa/ExtractText.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="81" column="5" selection-start="2618" selection-end="2618" vertical-scroll-proportion="0.0">
+            <state line="16" column="47" selection-start="402" selection-end="402" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -125,7 +107,45 @@
       <file leaf-file-name="SQLQuery.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/lisa/SQLQuery.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="116" column="24" selection-start="2897" selection-end="2897" vertical-scroll-proportion="0.0">
+            <state line="6" column="13" selection-start="97" selection-end="97" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ArticleAbstract.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/lisa/ArticleAbstract.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="67" column="5" selection-start="1288" selection-end="1288" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ArticleCPS.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/lisa/ArticleCPS.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="44" column="5" selection-start="975" selection-end="975" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Dictionary.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/lisa/Dictionary.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="35" column="5" selection-start="991" selection-end="991" vertical-scroll-proportion="-7.48">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Lemmer.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/lisa/Lemmer.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="44" column="32" selection-start="1586" selection-end="1586" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -141,22 +161,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/ArticleAbstract.java" />
         <option value="$PROJECT_DIR$/src/lisa/ArticleInterface.java" />
-        <option value="$PROJECT_DIR$/src/lisa/ArticleCPS.java" />
         <option value="$PROJECT_DIR$/src/lisa/TemplateStyle.java" />
         <option value="$PROJECT_DIR$/src/lisa/Vector.java" />
         <option value="$PROJECT_DIR$/src/lisa/Language.java" />
-        <option value="$PROJECT_DIR$/src/lisa/ArticleAbstract.java" />
-        <option value="$PROJECT_DIR$/src/lisa/SQLQuery.java" />
-        <option value="$PROJECT_DIR$/src/lisa/Common.java" />
         <option value="$PROJECT_DIR$/src/lisa/TEST.java" />
         <option value="$PROJECT_DIR$/src/lisa/PDFParser.java" />
-        <option value="$PROJECT_DIR$/logs.txt" />
         <option value="$PROJECT_DIR$/src/de/intarsys/pdf/example/extract/text/ExtractText.java" />
         <option value="$PROJECT_DIR$/src/lisa/ExtractText.java" />
-        <option value="$PROJECT_DIR$/src/Main.java" />
+        <option value="$PROJECT_DIR$/src/lisa/ArticleAbstract.java" />
+        <option value="$PROJECT_DIR$/src/lisa/ArticleCPS.java" />
+        <option value="$PROJECT_DIR$/src/lisa/Dictionary.java" />
+        <option value="$PROJECT_DIR$/src/lisa/Common.java" />
+        <option value="$PROJECT_DIR$/logs.txt" />
         <option value="$PROJECT_DIR$/src/lisa/Lemmer.java" />
+        <option value="$PROJECT_DIR$/src/Main.java" />
+        <option value="$PROJECT_DIR$/src/lisa/SQLQuery.java" />
       </list>
     </option>
   </component>
@@ -242,46 +262,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Lisa" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Lisa" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="example" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Lisa" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Lisa" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="example" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="text" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
       <pane id="PackagesPane" />
@@ -296,7 +276,7 @@
     <property name="recentsLimit" value="5" />
     <property name="MemberChooser.sorted" value="false" />
     <property name="options.lastSelected" value="fileTemplates" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../TheadsRes" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Test" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
@@ -320,7 +300,13 @@
       <option name="PASS_PARENT_ENVS" value="true" />
       <module name="Lisa" />
       <envs />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
       <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Debug" />
       <ConfigurationWrapper RunnerId="Run" />
       <method />
     </configuration>
@@ -452,14 +438,14 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1696" height="1026" extended-state="7" />
-    <editor active="true" />
+    <frame x="-8" y="-8" width="1696" height="1026" extended-state="1" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39930955" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -468,8 +454,8 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.249694" sideWeight="0.67548907" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32451093" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.249694" sideWeight="0.6766398" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32336017" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -542,112 +528,110 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/lisa/Vector.java">
+    <entry file="jar://C:/Program Files/Java/jdk1.7.0_21/src.zip!/java/lang/Integer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="44" column="0" selection-start="1123" selection-end="1123" vertical-scroll-proportion="0.0">
+        <state line="526" column="0" selection-start="19370" selection-end="19370" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lisa/ArticleInterface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="17" selection-start="184" selection-end="184" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lisa/ArticleAbstract.java">
+    <entry file="jar://C:/Program Files/Java/jdk1.7.0_21/src.zip!/java/lang/StringBuilder.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="21" selection-start="353" selection-end="353" vertical-scroll-proportion="0.0">
+        <state line="74" column="1" selection-start="2523" selection-end="2523" vertical-scroll-proportion="-20.4" />
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/extrlib/jPod.jar!/de/intarsys/pdf/content/text/CSTextExtractor.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="19" column="28" selection-start="613" selection-end="613" vertical-scroll-proportion="0.5708955" />
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/extrlib/jPod.jar!/de/intarsys/pdf/content/CSDeviceBasedInterpreter.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="22" column="0" selection-start="864" selection-end="864" vertical-scroll-proportion="0.6826004" />
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.7.0_21/src.zip!/java/io/FileReader.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="56" column="11" selection-start="1262" selection-end="1262" vertical-scroll-proportion="0.33333334" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lisa/ExtractText.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="68" column="17" selection-start="2306" selection-end="2306" vertical-scroll-proportion="0.78647685">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.7.0_21/src.zip!/java/lang/Throwable.java">
+    <entry file="jar://C:/Program Files/Java/jdk1.7.0_21/src.zip!/java/util/Scanner.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="209" column="32" selection-start="8602" selection-end="8602" vertical-scroll-proportion="0.0" />
+        <state line="1584" column="0" selection-start="58829" selection-end="58829" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.7.0_21/src.zip!/java/io/FileWriter.java">
+    <entry file="file://$PROJECT_DIR$/src/lisa/Common.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="61" column="11" selection-start="1583" selection-end="1583" vertical-scroll-proportion="0.8801431" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lisa/Keywords.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="13" selection-start="166" selection-end="166" vertical-scroll-proportion="0.030411448">
+        <state line="16" column="47" selection-start="402" selection-end="402" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/de/intarsys/pdf/example/extract/text/ExtractText.java">
+    <entry file="file://$PROJECT_DIR$/logs.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="83" column="53" selection-start="2615" selection-end="2615" vertical-scroll-proportion="0.5224719">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="LargeFileEditor">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lisa/Lemmer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="44" column="32" selection-start="1586" selection-end="1586" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lisa/Dictionary.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="35" column="5" selection-start="991" selection-end="991" vertical-scroll-proportion="-7.48">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.7.0_21/src.zip!/java/lang/String.java">
+    <entry file="file://$PROJECT_DIR$/src/lisa/ArticleCPS.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1910" column="0" selection-start="75549" selection-end="75549" vertical-scroll-proportion="0.0">
+        <state line="44" column="5" selection-start="975" selection-end="975" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.7.0_21/src.zip!/java/lang/Thread.java">
+    <entry file="file://$PROJECT_DIR$/src/lisa/ArticleAbstract.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="721" column="0" selection-start="26865" selection-end="26865" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.7.0_21/src.zip!/java/lang/NumberFormatException.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="64" column="0" selection-start="1283" selection-end="1283" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.7.0_21/src.zip!/java/lang/Integer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="526" column="0" selection-start="19370" selection-end="19370" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lisa/ExtractText.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="81" column="5" selection-start="2618" selection-end="2618" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lisa/Common.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="31" column="9" selection-start="847" selection-end="847" vertical-scroll-proportion="0.0">
+        <state line="67" column="5" selection-start="1288" selection-end="1288" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/lisa/SQLQuery.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="116" column="24" selection-start="2897" selection-end="2897" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/logs.txt">
-      <provider editor-type-id="text-editor">
-        <state line="799443" column="0" selection-start="41285750" selection-end="41285750" vertical-scroll-proportion="0.0" />
-      </provider>
-      <provider selected="true" editor-type-id="LargeFileEditor">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lisa/Lemmer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="54" column="32" selection-start="1776" selection-end="1776" vertical-scroll-proportion="0.0">
+        <state line="6" column="13" selection-start="97" selection-end="97" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="0" selection-start="895" selection-end="895" vertical-scroll-proportion="0.6666667">
-          <folding />
+        <state line="33" column="38" selection-start="753" selection-end="753" vertical-scroll-proportion="0.30427048">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

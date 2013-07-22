@@ -78,7 +78,7 @@ public class ExtractText extends CommonJPodExample{
 		PDDocument doc = getDoc();
 		StringBuilder sb = new StringBuilder();
 		extractText(doc.getPageTree(), sb);
-		return sb.toString().replace("\n", " ");
+		return sb.toString();
 	}
 
 	public String run(String file) throws Exception {

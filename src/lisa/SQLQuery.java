@@ -6,6 +6,8 @@ package lisa;
  * Date: 14.07.13
  * Time: 3:07
  * To change this template use File | Settings | File Templates.
+ * в некоторых функциях можно ретернить не из самого результсет, а сначала сохранить результат в стринги,
+ * а потом вызвать rs.close(), что несколько снижает затраты оперативной (вроде).
  */
 
 import java.sql.*;
@@ -30,8 +32,15 @@ public class SQLQuery {
 			if (conn == null) {
 				System.out.println("Нет соединения с БД!");
 			}
-			connected = true;
+			else connected = true;
+	}
 
+	public static void disconnect() throws SQLException {
+		// На самом деле я не хотел делать эту функцию, но
+		//если иногда не закрывать соединение, то обём используемой
+		//оперативки приводит к аутофмемори
+		conn.close();
+		connected = false;
 	}
 
 	private SQLQuery(){}
@@ -69,7 +78,7 @@ public class SQLQuery {
 			rs.next();
 			return rs.getString("ends");
 		} catch (SQLException e){
-			Common.createLog(e);
+			//Common.createLog(e); и это забивает тоже ><
 			return null;
 		}
 	}
@@ -83,7 +92,7 @@ public class SQLQuery {
 			rs.next();
 			return rs.getString("ends");
 		} catch (SQLException e){
-			Common.createLog(e);
+			//Common.createLog(e); Не загоняем в соммон крейт лог, поскольку они засоряют весь лог файл ><
 			return "";
 		}
 	}
@@ -99,7 +108,7 @@ public class SQLQuery {
 			ps.setString(2, arrayToString(serialize(obj)));
 			ps.executeUpdate();
 			ps.close();
-		} catch(SQLException e){Common.createLog(e);;}
+		} catch(SQLException e){Common.createLog(e);}
 		return 0;
 	}
 
@@ -110,12 +119,28 @@ public class SQLQuery {
 			Statement stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT ser FROM dumps WHERE id=\'" + id + "\'");
 			rs.next();
-//			System.out.println(rs.getString("ser"));
 			return deserialize(stringToArray(rs.getString("ser")));
 		} catch (SQLException e){
 			Common.createLog(e);
 			return null;
 		}
+	}
+
+	protected static void saveIntoDict(String word, int units, int freq, double meas){
+		try{
+			if(!connected)
+				connect();
+			PreparedStatement ps = conn.prepareStatement("INSERT INTO dict (word, units, freq, meas) VALUES (?, ?, ?, ?)");
+			ps.setString(1, word);
+			ps.setInt(2, units);
+			ps.setInt(3, freq);
+			ps.setDouble(4, meas);
+			ps.executeUpdate();
+			ps.close();
+			} catch (SQLException e){
+			Common.createLog(e);
+			}
+
 	}
 
 	private static String arrayToString(byte[] array){

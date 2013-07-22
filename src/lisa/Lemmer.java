@@ -1,5 +1,7 @@
 package lisa;
 
+import java.sql.SQLException;
+
 /**
  * Created with IntelliJ IDEA.
  * User: masyes
@@ -38,7 +40,8 @@ public class Lemmer implements Runnable{
 			for(int i = 0; i < Common.countThreads;i++){
 				threads[i].join();
 			}
-		}catch(InterruptedException e){
+			SQLQuery.disconnect();
+		}catch(InterruptedException|SQLException e){
 			Common.createLog(e);
 		}
 		return str;
@@ -57,7 +60,6 @@ public class Lemmer implements Runnable{
 					for(int i  = 0; i < ends.length && !work.equals(""); i++){
 						String str = SQLQuery.getEnd(Integer.parseInt(ends[i]));
 						if(str.contains(word.substring(work.length()))){
-							System.out.println(work);
 							words[curr] = work + str.substring(1, str.indexOf("%", 1));
 							work = "";
 						}

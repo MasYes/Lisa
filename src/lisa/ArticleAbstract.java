@@ -13,12 +13,19 @@ import java.io.Serializable;
 class ArticleAbstract implements Serializable, ArticleInterface{
 	private int id;
 	private int mark;
-	private Vector vector;
+	private int year;
+	private String link;
+	private String author;
+	private String university;
 	private String title;
 	private String body;
-	private String topic;
+	private String references;
+	private String topic; //Мб удалить и заменить УДК?
+	private String UDC;
 	private TemplateStyle template;
 	private Language lang;
+	private Vector vector;
+
 
 	String[] keywords(){
 		return Keywords.getKeywords(getSense());
@@ -32,8 +39,20 @@ class ArticleAbstract implements Serializable, ArticleInterface{
 		this.mark = i;
 	}
 
-	protected void setVector(){
-		this.vector = Vector.toVector(getSense());
+	protected void setYear(int i){
+		this.year = i;
+	}
+
+	protected void setLink(String str){
+		this.link = str;
+	}
+
+	protected void setAuthor(String str){
+		this.author = str;
+	}
+
+	protected void setUniversity(String str){
+		this.university = str;
 	}
 
 	protected void setTitle(String str){
@@ -43,6 +62,16 @@ class ArticleAbstract implements Serializable, ArticleInterface{
 	protected void setBody(String str){
 		this.body = str;
 	}
+
+	protected void setReferences(String str){
+		this.references = str;
+	}
+
+	protected void setVector(){
+		this.vector = Vector.toVector(getSense());
+	}
+
+
 
 	protected void setTopic(String str){
 		this.topic = str;
