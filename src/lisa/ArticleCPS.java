@@ -14,6 +14,8 @@ public class ArticleCPS extends ArticleAbstract {
 
 	private int section;
 
+
+	@Deprecated
 	public ArticleCPS(String[] str){ //С этим парсером не работает; лучше пользоваться Питоновским для таких случаев.
 		int i = 0;
 		while(str[i].equals(""))
@@ -52,7 +54,16 @@ public class ArticleCPS extends ArticleAbstract {
 		setTitle(str.substring(str.indexOf("<title>") + 7, str.indexOf("</title>")));
 		setBody(str.substring(str.indexOf("<body>") + 6, str.indexOf("</body>")));
 		setReferences(str.substring(str.indexOf("<references>") + 12, str.indexOf("</references>")));
+		setTemplate(TemplateStyle.CPS);
+		setVector();
+		setUDC("Unknown");
+		setLink("http://www.apmath.spbu.ru/ru/research/conference/pm/archive/");
+		setMark(-1);
+		setLanguage(Language.RU);
 	}
 
 
+	public String getInfo(){
+		return "Университет:" + this.getUniversity();
+	}
 }

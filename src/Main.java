@@ -1,9 +1,7 @@
 //import lisa.*;
 import de.intarsys.pdf.example.extract.text.ExtractText;
-import lisa.ArticleCPS;
+import lisa.*;
 import lisa.Dictionary;
-import lisa.Keywords;
-import lisa.Lemmer;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -23,9 +21,27 @@ import java.lang.ref.*;
  */
 public class Main {
 	public static void main(String[] args){
-			Keywords.computeMeasures();
+		File dir = new File("D:\\stxt2");
+		File [] files = dir.listFiles();
+		for(File i : files){
+			try{
+				Scanner file = new Scanner(i);
+				String str = "";
+				while(file.hasNext()){
+					str += file.nextLine();
+				}
+				System.out.println(i);
+				str = str.replaceAll("Ё", "Е");
+				str = str.replaceAll("ё", "е");
+				ArticleCPS art = new ArticleCPS(str);
+	//			SQLQuery.saveArticle(art);
+				file.close();
+				} catch (IOException e){
+					Common.createLog(e);
+				}
 		}
 	}
+}
 
 
 

@@ -12,5 +12,4 @@ public enum TemplateStyle {
 	TemplateStyle(int i){
 		this.method = i;
 	}
-
 }

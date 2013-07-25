@@ -14,9 +14,9 @@ import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.io.*;
 
-public class Dictionary implements Serializable {
+
+public class Dictionary {
 	protected static HashMap<String, Term> dict = new HashMap<>();
 
 	public static void addToDictionary(String[] str){
@@ -41,22 +41,4 @@ public class Dictionary implements Serializable {
 			SQLQuery.saveIntoDict(key, data.units, data.frequency, data.measure);
 		}
 	}
-
-
-
-	public static void ser(){
-		try{
-			FileOutputStream fos = new FileOutputStream("D:\\dict.txt");
-			ObjectOutputStream oos = new ObjectOutputStream(fos);
-			oos.writeObject(dict);
-			oos.flush();
-			oos.close();
-		}catch(Exception e){
-			System.out.println(e);
-		}
-
-
-
-	}
-
 }

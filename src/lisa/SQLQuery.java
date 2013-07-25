@@ -8,7 +8,11 @@ package lisa;
  * To change this template use File | Settings | File Templates.
  * в некоторых функциях можно ретернить не из самого результсет, а сначала сохранить результат в стринги,
  * а потом вызвать rs.close(), что несколько снижает затраты оперативной (вроде).
- * Засунуть все коннекты в "трай витх ресорс
+ * Засунуть все коннекты в "трай витх ресорс"
+ *
+ * CREATE TABLE articles(id int primary key auto_increment, author text, title text, vector long binary, UDC text, Template text, link text,
+ mark int, lang text, info text);
+ *
  */
 
 import java.sql.*;
@@ -141,8 +145,33 @@ public class SQLQuery {
 		} catch (SQLException e){
 			Common.createLog(e);
 		}
-
 	}
+
+	public static void saveArticle(ArticleAbstract article){
+		try{
+			if(!connected)
+				connect();
+			PreparedStatement ps = conn.prepareStatement("INSERT INTO lisa.articles " +
+					"(author, title, vector, UDC, Template," +
+					"link, mark, lang, info) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+			ps.setString(1, article.getAuthor());
+			ps.setString(2, article.getTitle());
+			ps.setString(3, arrayToString(serialize(article.getVector())));
+			ps.setString(4, article.getUDC());
+			ps.setString(5, article.getTemplate().toString());
+			ps.setString(6, article.getLink());
+			ps.setInt(7, article.getMark());
+			ps.setString(8, article.getLanguage().toString());
+			ps.setString(9, article.getInfo());
+			ps.executeUpdate();
+			ps.close();
+		} catch (SQLException e){
+			Common.createLog(e);
+		}
+	}
+
+
+
 
 	protected static void updateWord(Term term){
 		try{
@@ -190,8 +219,24 @@ public class SQLQuery {
 		}
 	}
 
+	public static int getIdWord(String word){
+		try{
+			if(!connected)
+				connect();
+			System.out.println(word);
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM lisa.dict WHERE word=\"" + word + "\"");
+
+			rs.next();
+			return  rs.getInt("id");
+		} catch (SQLException e){
+			//Common.createLog(e); // Если будет забивать логи - убить :D upd убил :D
+			return -1;
+		}
+	}
+
 	protected static int getCountOfArticles(){
-		return 946;
+		return -1;
 	}
 
 	private static String arrayToString(byte[] array){
@@ -206,6 +251,8 @@ public class SQLQuery {
 		res += '\'';
 		return res;
 	}
+
+
 
 	private static byte[] stringToArray(String str){
 		str = str.substring(1, str.length() - 1);

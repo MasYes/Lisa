@@ -20,12 +20,25 @@ class ArticleAbstract implements Serializable, ArticleInterface{
 	private String title;
 	private String body;
 	private String references;
-	private String topic; //Мб удалить и заменить УДК?
 	private String UDC;
 	private TemplateStyle template;
 	private Language lang;
 	private Vector vector;
 
+	protected ArticleAbstract(){
+		id = -1;
+		mark = 0;
+		year = -1;
+		link = "";
+		author = "";
+		university = "";
+		title = "";
+		body = "";
+		references = "";
+		UDC = "";
+		template = TemplateStyle.NONE;
+		lang = Language.RU;
+	}
 
 	String[] keywords(){
 		return Keywords.getKeywords(getSense());
@@ -34,6 +47,7 @@ class ArticleAbstract implements Serializable, ArticleInterface{
 	protected void setId(int i){
 		this.id = i;
 	}
+
 
 	protected void setMark(int i){
 		this.mark = i;
@@ -68,14 +82,17 @@ class ArticleAbstract implements Serializable, ArticleInterface{
 	}
 
 	protected void setVector(){
-		this.vector = Vector.toVector(getSense());
+		String str = getSense();
+		while(str.contains("  ")){
+			str = str.replace("  ", " ");
+		}
+		this.vector = Vector.toVector(Lemmer.lemmer(str));
 	}
 
-
-
-	protected void setTopic(String str){
-		this.topic = str;
+	protected void setUDC(String udc){
+		this.UDC = udc;
 	}
+
 
 	protected void setTemplate(TemplateStyle tmpl){
 		this.template = tmpl;
@@ -84,6 +101,7 @@ class ArticleAbstract implements Serializable, ArticleInterface{
 	protected void setLanguage(Language lang){
 		this.lang = lang;
 	}
+
 
 	public int getId(){
 		return id;
@@ -97,9 +115,22 @@ class ArticleAbstract implements Serializable, ArticleInterface{
 		return title;
 	}
 
-	public String getTopic() {
-		return topic;
+	public String getUDC(){
+		return UDC;
 	}
+
+	public Vector getVector(){
+		return vector;
+	}
+
+	public String getAuthor(){
+		return author;
+	}
+
+	public String getLink(){
+		return link;
+	}
+
 
 	public String getBody() {
 		return body;
@@ -115,6 +146,14 @@ class ArticleAbstract implements Serializable, ArticleInterface{
 
 	public String getSense(){
 		return title + " " + body;
+	}
+
+	public String getInfo(){
+		return "Year is" + year + ", university is" + university;
+	}
+
+	public String getUniversity(){
+		return university;
 	}
 
 	public double closeness(ArticleAbstract article){
