@@ -1,0 +1,18 @@
+[Thu Jul 25 18:50:56 GMT+04:00 2013]
+java.sql.SQLException: Column 'MAX('id')' not found.com.mysql.jdbc.SQLError.createSQLException(SQLError.java:1078)
+com.mysql.jdbc.SQLError.createSQLException(SQLError.java:989)
+com.mysql.jdbc.SQLError.createSQLException(SQLError.java:975)
+com.mysql.jdbc.SQLError.createSQLException(SQLError.java:920)
+com.mysql.jdbc.ResultSetImpl.findColumn(ResultSetImpl.java:1167)
+com.mysql.jdbc.ResultSetImpl.getInt(ResultSetImpl.java:2851)
+lisa.SQLQuery.getMaxID(SQLQuery.java:172)
+lisa.Keywords.computeMeasures(Keywords.java:47)
+lisa.Keywords.computeMeasures(Keywords.java:61)
+Main.main(Main.java:26)
+sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+java.lang.reflect.Method.invoke(Method.java:601)
+com.intellij.rt.execution.application.AppMain.main(AppMain.java:120)
+
+

@@ -44,6 +44,7 @@ public class ArticleCPS extends ArticleAbstract {
 		setReferences(references);
 	}
 
+
 	public ArticleCPS(String str){
 		section = Integer.parseInt(str.substring(str.indexOf("<section>") + 9, str.indexOf("</section>")));
 		setAuthor(str.substring(str.indexOf("<author>") + 8, str.indexOf("</author>")));

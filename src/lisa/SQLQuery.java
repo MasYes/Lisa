@@ -8,6 +8,7 @@ package lisa;
  * To change this template use File | Settings | File Templates.
  * в некоторых функциях можно ретернить не из самого результсет, а сначала сохранить результат в стринги,
  * а потом вызвать rs.close(), что несколько снижает затраты оперативной (вроде).
+ * Засунуть все коннекты в "трай витх ресорс
  */
 
 import java.sql.*;
@@ -137,10 +138,60 @@ public class SQLQuery {
 			ps.setDouble(4, meas);
 			ps.executeUpdate();
 			ps.close();
-			} catch (SQLException e){
+		} catch (SQLException e){
 			Common.createLog(e);
-			}
+		}
 
+	}
+
+	protected static void updateWord(Term term){
+		try{
+			if(!connected)
+				connect();
+			PreparedStatement ps = conn.prepareStatement("UPDATE lisa.dict SET freq=?, units=?, meas=? WHERE word=?;");
+			ps.setInt(1, term.frequency);
+			ps.setInt(2, term.units);
+			ps.setDouble(3, term.measure);
+			ps.setString(4, term.word);
+			ps.executeUpdate();
+			ps.close();
+		} catch (SQLException e){
+			Common.createLog(e);
+		}
+
+
+	}
+
+	public static int getMaxID(){
+		try{
+			if(!connected)
+				connect();
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT MAX(id) FROM lisa.dict");
+			rs.next();
+			return rs.getInt("MAX(id)");
+		} catch (SQLException e){
+			Common.createLog(e);
+			return -1;
+		}
+	}
+
+	protected static Term getWordData(int i){
+		try{
+			if(!connected)
+				connect();
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM lisa.dict WHERE id=" + i);
+			rs.next();
+			return  new Term(rs.getString("word"), rs.getInt("freq"), rs.getInt("units"), rs.getDouble("meas"));
+		} catch (SQLException e){
+			Common.createLog(e);
+			return null;
+		}
+	}
+
+	protected static int getCountOfArticles(){
+		return 946;
 	}
 
 	private static String arrayToString(byte[] array){

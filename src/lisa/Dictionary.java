@@ -6,6 +6,7 @@ package lisa;
  * Date: 18.07.13
  * Time: 17:47
  * To change this template use File | Settings | File Templates.
+ * НЕ ЗАБЫВАТЬ МЕНЯТЬ Ё НА Е
  */
 
 import java.util.HashMap;
@@ -16,7 +17,7 @@ import java.util.Collections;
 import java.io.*;
 
 public class Dictionary implements Serializable {
-	protected static HashMap<String, Data> dict = new HashMap<>();
+	protected static HashMap<String, Term> dict = new HashMap<>();
 
 	public static void addToDictionary(String[] str){
 		ArrayList<String> array = new ArrayList<>();
@@ -29,29 +30,19 @@ public class Dictionary implements Serializable {
 				dict.get(i).frequency+=Collections.frequency(array, i);
 			}
 			else{
-				dict.put(i, new Data( Collections.frequency(array, i) ));
+				dict.put(i, new Term( Collections.frequency(array, i) ));
 			}
 		}
-		System.out.println(dict.keySet().size());
 	}
 
 	public static void saveDictionary(){
 		for(String key: dict.keySet()){
-			Data data = dict.get(key);
+			Term data = dict.get(key);
 			SQLQuery.saveIntoDict(key, data.units, data.frequency, data.measure);
 		}
 	}
 
-	private static class Data implements Serializable{
-		protected int units;
-		protected int frequency;
-		protected double measure;
-		protected Data(int freq){
-			units = 1;
-			frequency = freq;
-			measure = 1;
-		}
-	}
+
 
 	public static void ser(){
 		try{
