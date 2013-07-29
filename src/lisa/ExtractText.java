@@ -81,7 +81,7 @@ public class ExtractText extends CommonJPodExample{
 		return sb.toString();
 	}
 
-	public String run(String file) throws Exception {
+	private String run(String file) throws Exception {
 		try {
 			open(file);
 			return extractText(file);

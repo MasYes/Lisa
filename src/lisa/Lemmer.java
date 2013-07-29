@@ -16,7 +16,7 @@ import java.sql.SQLException;
  * С 1 потоком, вроде, даже чуть быстрее.
  * И почему-то ИНТЕГРАЛУ и ИНТИГРАЛУ обрабатывается примерно за равное время 0о
  * Проверить, почему I J K L и некоторые другие буквы были пропущены
- *
+ * Заменить ЁРШ ><
  */
 public class Lemmer implements Runnable{
 
@@ -29,8 +29,10 @@ public class Lemmer implements Runnable{
 	}
 
 	public static String[] lemmer(String str){
+		str = str.replaceAll("\\p{Punct}", " ");
 		return lemmatization((str.toUpperCase()).split(" "));
 	}
+
 
 	private static String[] lemmatization(String[] str){
 		Thread[] threads = new Thread[Common.countThreads];

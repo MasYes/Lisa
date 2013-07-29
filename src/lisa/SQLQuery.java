@@ -10,8 +10,8 @@ package lisa;
  * а потом вызвать rs.close(), что несколько снижает затраты оперативной (вроде).
  * Засунуть все коннекты в "трай витх ресорс"
  *
- * CREATE TABLE articles(id int primary key auto_increment, author text, title text, vector long binary, UDC text, Template text, link text,
- mark int, lang text, info text);
+ * CREATE TABLE lisa.articles(id int primary key auto_increment, author text, title text, vector long binary, UDC text, Template text, link text,
+ mark int, language text, info text, publication text);
  *
  */
 
@@ -29,7 +29,7 @@ public class SQLQuery {
 	private static String DB = "lisa";
 	private static boolean connected = false;
 
-	public static void connect() throws SQLException {
+	private static void connect() throws SQLException {
 
 			conn = DriverManager.getConnection(
 					"jdbc:mysql://" + url + ":" + port + "/" + DB,
@@ -40,9 +40,9 @@ public class SQLQuery {
 			else connected = true;
 	}
 
-	public static void disconnect() throws SQLException {
-		// На самом деле я не хотел делать эту функцию, но
-		//если иногда не закрывать соединение, то обём используемой
+	protected static void disconnect() throws SQLException {
+		//На самом деле я не хотел делать эту функцию, но
+		//если иногда не закрывать соединение, то об]ём используемой
 		//оперативки приводит к аутофмемори
 		conn.close();
 		connected = false;
@@ -55,7 +55,7 @@ public class SQLQuery {
 		try {
 			ByteArrayInputStream is = new ByteArrayInputStream(array);
 			ObjectInputStream objInputStream = new ObjectInputStream(is);
-			return objInputStream.readObject();
+			return objInputStream.readObject(); //Если класс каст эксепшн, то, скорее всего, класс был изменен, а посему восстановить его нет возможности.
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -117,7 +117,7 @@ public class SQLQuery {
 		return 0;
 	}
 
-	public static Object readDump (String id){
+	protected static Object readDump (String id){
 		try{
 			if(!connected)
 				connect();
@@ -153,7 +153,7 @@ public class SQLQuery {
 				connect();
 			PreparedStatement ps = conn.prepareStatement("INSERT INTO lisa.articles " +
 					"(author, title, vector, UDC, Template," +
-					"link, mark, lang, info) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+					"link, mark, language, info,  publication) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			ps.setString(1, article.getAuthor());
 			ps.setString(2, article.getTitle());
 			ps.setString(3, arrayToString(serialize(article.getVector())));
@@ -163,6 +163,7 @@ public class SQLQuery {
 			ps.setInt(7, article.getMark());
 			ps.setString(8, article.getLanguage().toString());
 			ps.setString(9, article.getInfo());
+			ps.setString(10, article.getPublication());
 			ps.executeUpdate();
 			ps.close();
 		} catch (SQLException e){
@@ -205,7 +206,7 @@ public class SQLQuery {
 		}
 	}
 
-	protected static Term getWordData(int i){
+	public static Term getWordData(int i){
 		try{
 			if(!connected)
 				connect();
@@ -219,11 +220,54 @@ public class SQLQuery {
 		}
 	}
 
+	@Deprecated
+	protected static ArticleAbstract getArticleData(int i){
+		try{
+			if(!connected)
+				connect();
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM lisa.dict WHERE id=" + i);
+			rs.next();
+			return  new ArticleAbstract();
+		} catch (SQLException e){
+			Common.createLog(e);
+			return null;
+		}
+	}
+
+
+	public static Vector getArticleVector(int id){
+		try{
+			if(!connected)
+				connect();
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT vector FROM lisa.articles WHERE id=" + id);
+			rs.next();
+			return (Vector) deserialize(stringToArray(rs.getString("vector")));
+		} catch (SQLException e){
+			Common.createLog(e);
+			return null;
+		}
+	}
+
+	public static String getArticleTitle(int id){
+		try{
+			if(!connected)
+				connect();
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT title FROM lisa.articles WHERE id=" + id);
+			rs.next();
+			return rs.getString("title");
+		} catch (SQLException e){
+			Common.createLog(e);
+			return null;
+		}
+	}
+
 	public static int getIdWord(String word){
 		try{
 			if(!connected)
 				connect();
-			System.out.println(word);
 			Statement stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM lisa.dict WHERE word=\"" + word + "\"");
 
@@ -235,8 +279,19 @@ public class SQLQuery {
 		}
 	}
 
+
 	protected static int getCountOfArticles(){
-		return -1;
+		try{
+			if(!connected)
+				connect();
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT MAX(id) FROM lisa.articles");
+			rs.next();
+			return rs.getInt("MAX(id)");
+		} catch (SQLException e){
+			Common.createLog(e);
+			return -1;
+		}
 	}
 
 	private static String arrayToString(byte[] array){

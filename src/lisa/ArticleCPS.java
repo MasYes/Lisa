@@ -8,11 +8,11 @@
  */
 package lisa;
 
-import java.nio.file.Files;
 
 public class ArticleCPS extends ArticleAbstract {
 
 	private int section;
+	private String university;
 
 
 	@Deprecated
@@ -21,7 +21,6 @@ public class ArticleCPS extends ArticleAbstract {
 		while(str[i].equals(""))
 			i++;
 		setAuthor(str[i++]);
-		String university = "";
 		while(!str[i].equals("")){
 			university+=str[i++] + " ";
 		}
@@ -42,7 +41,6 @@ public class ArticleCPS extends ArticleAbstract {
 		}
 		setBody(body);
 		setTitle(title);
-		setUniversity(university);
 		setReferences(references);
 	}
 
@@ -50,12 +48,13 @@ public class ArticleCPS extends ArticleAbstract {
 	public ArticleCPS(String str){
 		section = Integer.parseInt(str.substring(str.indexOf("<section>") + 9, str.indexOf("</section>")));
 		setAuthor(str.substring(str.indexOf("<author>") + 8, str.indexOf("</author>")));
-		setUniversity(str.substring(str.indexOf("<university>") + 12, str.indexOf("</university>")));
+		university = str.substring(str.indexOf("<university>") + 12, str.indexOf("</university>"));
 		setTitle(str.substring(str.indexOf("<title>") + 7, str.indexOf("</title>")));
 		setBody(str.substring(str.indexOf("<body>") + 6, str.indexOf("</body>")));
 		setReferences(str.substring(str.indexOf("<references>") + 12, str.indexOf("</references>")));
 		setTemplate(TemplateStyle.CPS);
 		setVector();
+		setPublication("Процессы управления и устойчивость");
 		setUDC("Unknown");
 		setLink("http://www.apmath.spbu.ru/ru/research/conference/pm/archive/");
 		setMark(-1);
@@ -64,6 +63,6 @@ public class ArticleCPS extends ArticleAbstract {
 
 
 	public String getInfo(){
-		return "Университет:" + this.getUniversity();
+		return "Университет:" + this.university + "; секция: " + this.section;
 	}
 }

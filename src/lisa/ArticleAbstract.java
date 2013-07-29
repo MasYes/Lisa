@@ -16,7 +16,7 @@ class ArticleAbstract implements Serializable, ArticleInterface{
 	private int year;
 	private String link;
 	private String author;
-	private String university;
+	private String publication;
 	private String title;
 	private String body;
 	private String references;
@@ -25,13 +25,13 @@ class ArticleAbstract implements Serializable, ArticleInterface{
 	private Language lang;
 	private Vector vector;
 
-	protected ArticleAbstract(){
+	public ArticleAbstract(){
 		id = -1;
 		mark = 0;
 		year = -1;
 		link = "";
 		author = "";
-		university = "";
+		publication = "";
 		title = "";
 		body = "";
 		references = "";
@@ -41,7 +41,7 @@ class ArticleAbstract implements Serializable, ArticleInterface{
 	}
 
 	String[] keywords(){
-		return Keywords.getKeywords(getSense());
+		return Keywords.getKeywords(vector);
 	}
 
 	protected void setId(int i){
@@ -65,8 +65,8 @@ class ArticleAbstract implements Serializable, ArticleInterface{
 		this.author = str;
 	}
 
-	protected void setUniversity(String str){
-		this.university = str;
+	protected void setPublication(String str){
+		this.publication = str;
 	}
 
 	protected void setTitle(String str){
@@ -149,16 +149,13 @@ class ArticleAbstract implements Serializable, ArticleInterface{
 	}
 
 	public String getInfo(){
-		return "Year is" + year + ", university is" + university;
+		return "";
 	}
 
-	public String getUniversity(){
-		return university;
+	public String getPublication(){
+		return publication;
 	}
 
-	public double closeness(ArticleAbstract article){
-		return Vector.distance(this.vector, article.vector);
-	}
 
 	public boolean equals(ArticleAbstract article){
 		return this.title.equals(article.title);

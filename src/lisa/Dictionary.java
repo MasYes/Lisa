@@ -6,20 +6,20 @@ package lisa;
  * Date: 18.07.13
  * Time: 17:47
  * To change this template use File | Settings | File Templates.
+ *
+ *CREATE TABLE lisa.dict(id int AUTO_INCREMENT primary key, word char(32) unique, units int, freq int, meas double);
+ *
  * НЕ ЗАБЫВАТЬ МЕНЯТЬ Ё НА Е
  */
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
+import java.io.File;
+import java.util.*;
 
 
 public class Dictionary {
 	protected static HashMap<String, Term> dict = new HashMap<>();
 
-	public static void addToDictionary(String[] str){
+	private static void addToDictionary(String[] str){
 		ArrayList<String> array = new ArrayList<>();
 		array.addAll(Arrays.asList(str)); //еще не определился, как лучше - так, или в конатрукторе сразу привести к такому виду.
 		HashSet<String> set = new HashSet<>(array);
@@ -41,4 +41,34 @@ public class Dictionary {
 			SQLQuery.saveIntoDict(key, data.units, data.frequency, data.measure);
 		}
 	}
+
+	public static void createDict(String path){
+		File dir = new File(path);
+		File [] files = dir.listFiles();
+		for(File i : files){
+			try{
+				System.gc();
+				Scanner file = new Scanner(i);
+				String str = "";
+				while(file.hasNext()){
+					str += file.nextLine() + " ";
+				}
+				System.out.println(i);
+				str = str.replaceAll("-", "");
+				str = str.replaceAll("Ё", "Е");
+				str = str.replaceAll("ё", "е");
+				ArticleCPS art = new ArticleCPS(str);
+				str = art.getSense();
+				while(str.contains("  ")){
+					str = str.replace("  ", " ");
+				}
+				Dictionary.addToDictionary(Lemmer.lemmer(str));
+				file.close();
+			} catch (Exception e){
+				lisa.Common.createLog(e);
+			}
+		}
+		Dictionary.saveDictionary();
+	}
 }
+

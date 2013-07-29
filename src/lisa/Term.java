@@ -9,7 +9,7 @@ package lisa;
  */
 public class Term {
 
-	String word;
+	public String word;
 	protected int units;
 	protected int frequency;
 	protected double measure;

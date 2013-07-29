@@ -4,6 +4,8 @@
  * Date: 12.07.13
  * Time: 20:07
  * To change this template use File | Settings | File Templates.
+ * Распоточить по возможности.
+ *
  * Внимание! Расчет мер нужно производить ПОСЛЕ добавления коллекции статей, ибо
  * используется количество статей коллекции.
  * Проверить ключевые слова, ибо результаты меня не впечатляют 0о Мб просто маленькая коллекция.
@@ -11,6 +13,11 @@
  * В общем, философия метода такова, что все найденные слова несут какой-то "смысл". В этом плане
  * он верен. Второй шаг - найти "ключевые" слова из всех, что несут какой-то "смысл".
  * А еще надо попинать леммер, ибо бесит ><
+ *
+ * А вообще, в будущем надо использовать этот метод не для поиска ключевых, а для выделения "значимых слов", что заметно
+ * уменьшит словарь => все будет работать быстрее)
+ *
+ *
  */
 package lisa;
 
@@ -21,6 +28,7 @@ public class Keywords{ //implements Runnable {
 	private static BigInteger[][] snsk;
 	private static int height = 1150; //1150
 	private static int width = 200; //200
+	private static double probability = 1e-18; // Если meas меньше данного значения то слово обзываем кллючевым.
 
 	private Keywords(){}
 
@@ -46,7 +54,7 @@ public class Keywords{ //implements Runnable {
 		return snsk[i][j];
 	}
 
-	public static void computeMeasures(int id){
+	protected static void computeMeasures(int id){
 		initsnsk();
 		int count = SQLQuery.getCountOfArticles();
 		int last = SQLQuery.getMaxID();
@@ -69,7 +77,7 @@ public class Keywords{ //implements Runnable {
 		computeMeasures(1);
 	}
 
-	public static BigInteger multiplyFromTo(int from, int to){ //перемножает все числа от from+1 до (to); Если from == to, то единицу
+	private static BigInteger multiplyFromTo(int from, int to){ //перемножает все числа от from+1 до (to); Если from == to, то единицу
 		BigInteger res = BigInteger.ONE;
 		while(from < to){
 			from++;
@@ -96,5 +104,21 @@ public class Keywords{ //implements Runnable {
 		return res;
 	}
 
+	@Deprecated
 	protected static String[] getKeywords(String text) {return new String[]{};}
+
+	protected static String[] getKeywords(Vector vect) {
+		int count = 10; // искусственно ограничиваю количество возможных ключевых слов на 1 статью.
+		int i = 0;
+		String[] keywords = new String[count];
+		for(Integer key : vect.keySet()){
+			if(i == count)	break;
+			Term word = SQLQuery.getWordData(key);
+			if(word.measure < probability){
+				keywords[i] = word.word;
+				i++;
+			}
+		}
+		return keywords;
+	}
 }

@@ -1,15 +1,5 @@
-//import lisa.*;
-import de.intarsys.pdf.example.extract.text.ExtractText;
 import lisa.*;
-import lisa.Dictionary;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.nio.file.*;
-import java.io.*;
-import java.sql.SQLException;
-import java.util.*;
-import java.lang.ref.*;
+import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,55 +8,24 @@ import java.lang.ref.*;
  * Time: 1:05
  * To change this template use File | Settings | File Templates.
  * \\p{Punct}\n]
+ *
+ * В целом, как я и говорил, вся проблема с парсером... Углы очень большие.
+ * Да, между похожими они меньше, но всё равно... И с леммером надо разобраться.
+ * Но так, если в целом, то всё даже работает....
  */
 public class Main {
 	public static void main(String[] args){
-		File dir = new File("D:\\stxt2");
-		File [] files = dir.listFiles();
-		for(File i : files){
-			try{
-				Scanner file = new Scanner(i);
-				String str = "";
-				while(file.hasNext()){
-					str += file.nextLine();
-				}
+		long time = System.currentTimeMillis();
+		lisa.Article art = new Article("D:\\example.pdf", true);
+		for(String i : art.keywords()){
+			if(i != null)
 				System.out.println(i);
-				str = str.replaceAll("Ё", "Е");
-				str = str.replaceAll("ё", "е");
-				ArticleCPS art = new ArticleCPS(str);
-	//			SQLQuery.saveArticle(art);
-				file.close();
-				} catch (IOException e){
-					Common.createLog(e);
-				}
 		}
+		System.out.println("_____________________________");
+		for(Integer i : art.nearest(6)){
+			if(i != null)
+				System.out.println(SQLQuery.getArticleTitle(i));
+		}
+		System.out.println(System.currentTimeMillis() - time);
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		/*
-		lisa.Keywords.initsnsk();
-		BigDecimal dd = Keywords.get(1000,150).divide(Keywords.get(1100, 170), 4);
-	//	dd = dd.divide(Keywords.get(1000,150));
-
-		System.out.println(dd);
-		while(true){}
-	}
-}*/

@@ -1,10 +1,9 @@
 package lisa;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.io.FileWriter;
+import java.io.*;
 import java.util.Date;
+import java.util.Scanner;
+
 /**
  * Created with IntelliJ IDEA.
  * User: masyes
@@ -31,6 +30,32 @@ public class Common {
 		} catch (IOException e){
 			System.out.println("Всё очень плохо...");
 		}
+	}
+
+	public static void addArticles(String path){
+		File dir = new File(path);
+		File [] files = dir.listFiles();
+		for(File i : files){
+			try{
+				Scanner file = new Scanner(i);
+				String str = "";
+				while(file.hasNext()){
+					str += file.nextLine() + " ";
+				}
+				System.out.println(i);
+				str = str.replaceAll("Ё", "Е");
+				str = str.replaceAll("ё", "е");
+				ArticleCPS art = new ArticleCPS(str);
+				SQLQuery.saveArticle(art);
+				file.close();
+			} catch (IOException e){
+				Common.createLog(e);
+			}
+		}
+
+
+
+
 	}
 
 }
