@@ -22,8 +22,13 @@ import java.util.Arrays;
 
 public class Vector extends HashMap<Integer, Double> { //Имхо, наследовать было рационально, ибо создавать класс с 1 полем и оперировать им - не круто.
 
+	private double norm = 0.0;
 
-	public static Vector toVector(String str){
+	protected double getNorm(){
+		return norm;
+	}
+
+	protected static Vector toVector(String str){
 		while(str.contains("  ")){
 			str = str.replace("  ", " ");
 		}
@@ -47,6 +52,8 @@ public class Vector extends HashMap<Integer, Double> { //Имхо, наслед�
 		return vector;
 	}
 
+
+
 	public Double at(Integer i){
 		Double res = this.get(i);
 		if(res != null)
@@ -55,7 +62,7 @@ public class Vector extends HashMap<Integer, Double> { //Имхо, наслед�
 	}
 
 	protected Integer[] findClose(){
-		double angle = 0.9; //(~5градусов) Если угол между векторами меньше этого - то они считаются близкими.
+		double angle = 0.8; //(~45гр) Если угол между векторами меньше этого - то они считаются близкими.
 		int count = 10; /* пока тоже, для простоты и тестов, искуственно понижу количество "близких" статей.
 						в последствии, естественно, нужно будет это изменить */
 		int curr = 0;
@@ -66,12 +73,13 @@ public class Vector extends HashMap<Integer, Double> { //Имхо, наслед�
 			if(angle(vect) < angle){
 				res[curr] = i;
 				curr++;
+				System.out.println(i + "====" + angle(vect));
 			}
 		}
 		return res;
 	}
 
-	protected Integer[] nearest(int count){
+	protected Integer[] nearest(int count){ // проблема в том, что возаращаемый массив не отсортирован
 		Integer[] res = new Integer[count];
 		double[] values = new double[count];
 		for(int i = 0; i < count; i++){
@@ -117,7 +125,6 @@ public class Vector extends HashMap<Integer, Double> { //Имхо, наслед�
 	}
 
 	private void normalize(){ // С такой штукой при вычислении углов можно не делить на норму вектора
-		Double norm = 0.0;
 		for(Integer i : keySet()){
 			norm+= Math.pow(get(i),2);
 		}

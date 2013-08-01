@@ -147,6 +147,22 @@ public class SQLQuery {
 		}
 	}
 
+	protected static void saveIntoDict(Term term){
+		try{
+			if(!connected)
+				connect();
+			PreparedStatement ps = conn.prepareStatement("INSERT INTO dict (word, units, freq, meas) VALUES (?, ?, ?, ?)");
+			ps.setString(1, term.getWord());
+			ps.setInt(2, term.getUnits());
+			ps.setInt(3, term.getFrequency());
+			ps.setDouble(4, term.getMeasure());
+			ps.executeUpdate();
+			ps.close();
+		} catch (SQLException e){
+			Common.createLog(e);
+		}
+	}
+
 	public static void saveArticle(ArticleAbstract article){
 		try{
 			if(!connected)
@@ -179,10 +195,10 @@ public class SQLQuery {
 			if(!connected)
 				connect();
 			PreparedStatement ps = conn.prepareStatement("UPDATE lisa.dict SET freq=?, units=?, meas=? WHERE word=?;");
-			ps.setInt(1, term.frequency);
-			ps.setInt(2, term.units);
-			ps.setDouble(3, term.measure);
-			ps.setString(4, term.word);
+			ps.setInt(1, term.getFrequency());
+			ps.setInt(2, term.getUnits());
+			ps.setDouble(3, term.getMeasure());
+			ps.setString(4, term.getWord());
 			ps.executeUpdate();
 			ps.close();
 		} catch (SQLException e){
@@ -192,7 +208,7 @@ public class SQLQuery {
 
 	}
 
-	public static int getMaxID(){
+	public static int getCountOfWords(){
 		try{
 			if(!connected)
 				connect();

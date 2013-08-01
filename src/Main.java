@@ -1,5 +1,6 @@
 import lisa.*;
-import java.util.Date;
+import java.util.HashSet;
+import java.io.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,16 +17,23 @@ import java.util.Date;
 public class Main {
 	public static void main(String[] args){
 		long time = System.currentTimeMillis();
-		lisa.Article art = new Article("D:\\example.pdf", true);
-		for(String i : art.keywords()){
-			if(i != null)
-				System.out.println(i);
-		}
-		System.out.println("_____________________________");
-		for(Integer i : art.nearest(6)){
-			if(i != null)
-				System.out.println(SQLQuery.getArticleTitle(i));
-		}
+		Article art = new Article("D:\\example4.pdf", true);
 		System.out.println(System.currentTimeMillis() - time);
+		time = System.currentTimeMillis();
+		for(Integer i: art.findClose()){
+			if(i != null){
+				System.out.println(SQLQuery.getArticleTitle(i));
+			}
+		}
+		System.out.println(System.currentTimeMillis() - time + "\n_______________________________________________");
+		time = System.currentTimeMillis();
+		int count = 0;
+		for(String i: art.keywords()){
+			if(i != null){
+				System.out.println(i);
+				count++;
+			}
+		}
+		System.out.println(count + "\n" + (System.currentTimeMillis() - time));
 	}
 }

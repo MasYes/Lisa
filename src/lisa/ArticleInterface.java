@@ -11,7 +11,6 @@ public interface ArticleInterface {
 	String getSense(); //from that we will try to find keywords etc.
 	//double closeness(ArticleAbstract article); //distance between two article
 	TemplateStyle getTemplate();
-	int getId();
 	String getTitle();
 
 }

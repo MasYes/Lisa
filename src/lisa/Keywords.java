@@ -17,7 +17,7 @@
  * А вообще, в будущем надо использовать этот метод не для поиска ключевых, а для выделения "значимых слов", что заметно
  * уменьшит словарь => все будет работать быстрее)
  *
- *
+ *term.frequency/term.units>2 && term.units < count*0.1 && term.frequency < height && term.units < width
  */
 package lisa;
 
@@ -25,57 +25,10 @@ import java.math.BigInteger;
 
 
 public class Keywords{ //implements Runnable {
-	private static BigInteger[][] snsk;
-	private static int height = 1150; //1150
-	private static int width = 200; //200
+
 	private static double probability = 1e-18; // Если meas меньше данного значения то слово обзываем кллючевым.
 
 	private Keywords(){}
-
-	private static void initsnsk(){
-		snsk = new BigInteger[height][];
-		for(int i = 0; i < height; i++){
-			snsk[i] = new BigInteger[width];
-		}
-		snsk[0][0] = BigInteger.ONE;
-		for(int i = 1; i < width; i++){
-			snsk[0][i] = BigInteger.ZERO;
-		}
-		for(int i = 1; i < height; i++){
-			for(int j = 0; j < width; j++){
-				snsk[i][j] = get(i-1, j-1).add( get(i-1, j).multiply(BigInteger.valueOf(j)) ); // OMG, ай хейт джава, все дела. Перегрузка операторов ><
-			}
-		}
-	}
-
-	private static BigInteger get(int i, int j){
-		if(i < 0 || j < 0)
-			return BigInteger.ZERO;
-		return snsk[i][j];
-	}
-
-	protected static void computeMeasures(int id){
-		initsnsk();
-		int count = SQLQuery.getCountOfArticles();
-		int last = SQLQuery.getMaxID();
-		for(int i = id; i <= last; i++){
-			System.out.println(i);
-			Term term = SQLQuery.getWordData(i);
-			term.measure = 1;
-			if(term.frequency/term.units>2 && term.units < count*0.1 && term.frequency < height && term.units < width){
-				BigInteger res = BigInteger.ZERO;
-				for(int n = 1; n <= term.units; n++){
-					res = res.add(multiplyFromTo(count - n, count).multiply(get(term.frequency, n)));
-				}
-				term.measure = division(res, BigInteger.valueOf(count).pow(term.frequency));
-			}
-			SQLQuery.updateWord(term);
-		}
-	}
-
-	public static void computeMeasures(){
-		computeMeasures(1);
-	}
 
 	private static BigInteger multiplyFromTo(int from, int to){ //перемножает все числа от from+1 до (to); Если from == to, то единицу
 		BigInteger res = BigInteger.ONE;
@@ -107,15 +60,33 @@ public class Keywords{ //implements Runnable {
 	@Deprecated
 	protected static String[] getKeywords(String text) {return new String[]{};}
 
+
+	//@Deprecated // лучше расписать случай, когда слова нет, ибо мб ключевое
+	//В условиях суровых нынешних реалий, поскольку я откинул все "неинтересные слова", то
+	//слово, встречающееся часто в какой-то статье может быне не ключевым, а скучным.
 	protected static String[] getKeywords(Vector vect) {
-		int count = 10; // искусственно ограничиваю количество возможных ключевых слов на 1 статью.
+		int count = 1000; // искусственно ограничиваю количество возможных ключевых слов на 1 статью.
 		int i = 0;
 		String[] keywords = new String[count];
 		for(Integer key : vect.keySet()){
 			if(i == count)	break;
-			Term word = SQLQuery.getWordData(key);
-			if(word.measure < probability){
-				keywords[i] = word.word;
+			Term term = SQLQuery.getWordData(key);
+			/*некоторые пробелмы с таким определением ключевых слов могут возникнуть
+			К примеру, если кто-то укажет однажды во введении, что он рассматривает задачу
+			информационного поиска. В таком случае ИП - ключевое. С другой стороны, это
+			помогает от "случайного" упоминания слова, которое подозревается в ключеватости.
+
+			А еще может быть случай, когда во многих статьях случайно упоминается слово "символ".
+			Тогда оно может не стать ключевым для статьи, посвещенной различным символам.
+			Мб включать информацию о слове в том случае, когда оно упоминается в ней >1 раза?
+			Надо будет поэкспериментировать.
+
+			К тому же нужно будет попробовать анализировать "ключеватьсть" слова,
+			основываясь на его положении в тексте.
+			 */
+			if(term.getMeasure() < probability && term.getFrequency()/term.getUnits()>2 &&
+					term.getUnits() < SQLQuery.getCountOfArticles()*0.1 && vect.get(key)*vect.getNorm() > 1){
+				keywords[i] = term.getWord();
 				i++;
 			}
 		}

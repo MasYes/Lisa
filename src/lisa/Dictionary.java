@@ -26,19 +26,21 @@ public class Dictionary {
 		set.remove("");
 		for(String i : set){
 			if(dict.containsKey(i)){
-				dict.get(i).units++;
-				dict.get(i).frequency+=Collections.frequency(array, i);
+				dict.get(i).incrementUnits();
+				dict.get(i).addToFrequency(Collections.frequency(array, i));
 			}
 			else{
-				dict.put(i, new Term( Collections.frequency(array, i) ));
+				dict.put(i, new Term(i, Collections.frequency(array, i) ));
 			}
 		}
 	}
 
 	public static void saveDictionary(){
 		for(String key: dict.keySet()){
-			Term data = dict.get(key);
-			SQLQuery.saveIntoDict(key, data.units, data.frequency, data.measure);
+			Term term = dict.get(key);
+			term.computeMeasure();
+			if(term.getMeasure() < 0.0002)
+				SQLQuery.saveIntoDict(term);
 		}
 	}
 

@@ -13,7 +13,7 @@ import java.util.Scanner;
  */
 public class Common {
 	private Common(){}
-	protected final static int countThreads = 1;
+	protected final static int COUNT_THREADS = 1;
 
 	public static void createLog(Exception e){
 		System.out.println("LOG");
@@ -52,10 +52,23 @@ public class Common {
 				Common.createLog(e);
 			}
 		}
-
-
-
-
 	}
+
+	protected static void computeMeasures(int id){
+		int last = SQLQuery.getCountOfWords();
+		for(int i = id; i <= last; i++){
+			System.out.println(i);
+			Term term = SQLQuery.getWordData(i);
+			term.computeMeasure();
+			SQLQuery.updateWord(term);
+		}
+	}
+
+	public static void computeMeasures(){
+		computeMeasures(1);
+	}
+
+
+
 
 }

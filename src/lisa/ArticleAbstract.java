@@ -11,30 +11,24 @@ package lisa;
 import java.io.Serializable;
 
 class ArticleAbstract implements Serializable, ArticleInterface{
-	private int id;
 	private int mark;
-	private int year;
 	private String link;
 	private String author;
 	private String publication;
 	private String title;
 	private String body;
-	private String references;
 	private String UDC;
 	private TemplateStyle template;
 	private Language lang;
 	private Vector vector;
 
 	public ArticleAbstract(){
-		id = -1;
 		mark = 0;
-		year = -1;
 		link = "";
 		author = "";
 		publication = "";
 		title = "";
 		body = "";
-		references = "";
 		UDC = "";
 		template = TemplateStyle.NONE;
 		lang = Language.RU;
@@ -44,17 +38,9 @@ class ArticleAbstract implements Serializable, ArticleInterface{
 		return Keywords.getKeywords(vector);
 	}
 
-	protected void setId(int i){
-		this.id = i;
-	}
-
 
 	protected void setMark(int i){
 		this.mark = i;
-	}
-
-	protected void setYear(int i){
-		this.year = i;
 	}
 
 	protected void setLink(String str){
@@ -77,10 +63,6 @@ class ArticleAbstract implements Serializable, ArticleInterface{
 		this.body = str;
 	}
 
-	protected void setReferences(String str){
-		this.references = str;
-	}
-
 	protected void setVector(){
 		String str = getSense();
 		while(str.contains("  ")){
@@ -100,11 +82,6 @@ class ArticleAbstract implements Serializable, ArticleInterface{
 
 	protected void setLanguage(Language lang){
 		this.lang = lang;
-	}
-
-
-	public int getId(){
-		return id;
 	}
 
 	public int getMark(){

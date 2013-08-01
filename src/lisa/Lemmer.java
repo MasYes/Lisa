@@ -29,19 +29,22 @@ public class Lemmer implements Runnable{
 	}
 
 	public static String[] lemmer(String str){
+		str = str.replaceAll("\n", " ");
 		str = str.replaceAll("\\p{Punct}", " ");
+		str = str.replaceAll("\\p{javaWhitespace}", " "); // Я без понятия, что это, но иногда эта дрянь вылезает.
+		//Нужно будет попробовать всё, что не буква - удалять.
 		return lemmatization((str.toUpperCase()).split(" "));
 	}
 
 
 	private static String[] lemmatization(String[] str){
-		Thread[] threads = new Thread[Common.countThreads];
-		for(int i = 0; i < Common.countThreads;i++){
+		Thread[] threads = new Thread[Common.COUNT_THREADS];
+		for(int i = 0; i < Common.COUNT_THREADS;i++){
 			threads[i] = new Thread(new Lemmer(str, i));
 			threads[i].start();
 		}
 		try{
-			for(int i = 0; i < Common.countThreads;i++){
+			for(int i = 0; i < Common.COUNT_THREADS;i++){
 				threads[i].join();
 			}
 			SQLQuery.disconnect();
@@ -72,7 +75,7 @@ public class Lemmer implements Runnable{
 				if(work.length() > 0)
 					work = work.substring(0, work.length() - 1);
 			}
-			curr += Common.countThreads;
+			curr += Common.COUNT_THREADS;
 		}
 
 	}

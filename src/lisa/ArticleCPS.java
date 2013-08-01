@@ -13,6 +13,15 @@ public class ArticleCPS extends ArticleAbstract {
 
 	private int section;
 	private String university;
+	private String references;
+
+	private void setReferences(String str){
+		references = str;
+	}
+
+	public String getReferences(){
+		return references;
+	}
 
 
 	@Deprecated
