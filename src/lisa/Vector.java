@@ -35,7 +35,7 @@ public class Vector extends HashMap<Integer, Double> { //Имхо, наслед�
 		return toVector(str.split(" "));
 	}
 
-	private static final long serialVersionUID = -2333077002148210131L; /* На самом деле, это уже лайфхак,
+/*	private static final long serialVersionUID = -2333077002148210131L; /* На самом деле, это уже лайфхак,
 						но с этой штукой нет проблем, когда чуть измененный класс уже не подниамется из дампа.*/
 
 	protected static Vector toVector(String[] str){

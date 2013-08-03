@@ -37,7 +37,7 @@ public class Article{
 	public Article(String file){
 		text = ExtractText.parse(file);
 		normalize();
-		vector = new Vector();
+		vector = Vector.toVector(Lemmer.lemmer(text));
 	}
 
 	public Article(String file, boolean createVector){

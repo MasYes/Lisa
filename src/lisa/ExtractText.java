@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.Scanner;
 
 import de.intarsys.pdf.content.CSDeviceBasedInterpreter;
 import de.intarsys.pdf.content.CSException;
@@ -40,6 +41,14 @@ import de.intarsys.tools.stream.StreamTools;
 public class ExtractText extends CommonJPodExample{
 
 	public static String parse(String file) {
+		switch(file.substring(file.lastIndexOf("."))){
+			case ".pdf" :	return parsePDF(file);
+			case ".txt" :	return parseTXT(file);
+			default : throw new UnsupportedFormatException();
+		}
+	}
+
+	public static String parsePDF(String file) {
 		ExtractText client = new ExtractText();
 		try {
 			return client.run(file);
@@ -47,6 +56,23 @@ public class ExtractText extends CommonJPodExample{
 			Common.createLog(e);
 			return "";
 		}
+	}
+
+	public static String parseTXT(String file) {
+		File text = new File(file);
+			try{
+				System.gc();
+				Scanner scan = new Scanner(text);
+				String str = "";
+				while(scan.hasNext()){
+					str += scan.nextLine() + "\n";
+				}
+				return str;
+			}
+			catch(IOException e){
+				Common.createLog(e);
+				return "";
+			}
 	}
 
 	protected void extractText(PDPageTree pageTree, StringBuilder sb) {
@@ -88,7 +114,6 @@ public class ExtractText extends CommonJPodExample{
 		} finally {
 			close();
 		}
-
 	}
 }
 

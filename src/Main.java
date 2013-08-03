@@ -16,24 +16,20 @@ import java.io.*;
  */
 public class Main {
 	public static void main(String[] args){
-		long time = System.currentTimeMillis();
-		Article art = new Article("D:\\example4.pdf", true);
-		System.out.println(System.currentTimeMillis() - time);
-		time = System.currentTimeMillis();
-		for(Integer i: art.findClose()){
-			if(i != null){
-				System.out.println(SQLQuery.getArticleTitle(i));
-			}
-		}
-		System.out.println(System.currentTimeMillis() - time + "\n_______________________________________________");
-		time = System.currentTimeMillis();
-		int count = 0;
-		for(String i: art.keywords()){
-			if(i != null){
+		System.out.println(new File("D:\\example.pdf").length());
+		System.out.println(new File("D:\\example2.pdf").length());
+		System.out.println(new File("D:\\example3.pdf").length());
+		System.out.println(new File("D:\\example4.pdf").length());
+		System.out.println(new File("D:\\example5.pdf").length());
+		/*
+		Article art = new Article("D:\\example4.pdf");
+		for(String i : art.keywords()){
+			if(i!=null)
 				System.out.println(i);
-				count++;
-			}
 		}
-		System.out.println(count + "\n" + (System.currentTimeMillis() - time));
+		for(Integer i : art.findClose()){
+			if(i!=null)
+				System.out.println(SQLQuery.getArticleTitle(i));
+		}*/
 	}
 }
