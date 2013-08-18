@@ -71,6 +71,10 @@ class ArticleAbstract implements Serializable, ArticleInterface{
 		this.vector = Vector.toVector(Lemmer.lemmer(str));
 	}
 
+	protected void setVector(Vector vect){
+		this.vector = vect;
+	}
+
 	protected void setUDC(String udc){
 		this.UDC = udc;
 	}

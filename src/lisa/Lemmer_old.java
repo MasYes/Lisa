@@ -18,12 +18,12 @@ import java.sql.SQLException;
  * Проверить, почему I J K L и некоторые другие буквы были пропущены
  * Заменить ЁРШ ><
  */
-public class Lemmer implements Runnable{
+public class Lemmer_old implements Runnable{
 
 	private String[] words;
 	private int num;
 
-	private Lemmer(String[] str, int i){
+	private Lemmer_old(String[] str, int i){
 		words = str;
 		num = i;
 	}
@@ -40,7 +40,7 @@ public class Lemmer implements Runnable{
 	private static String[] lemmatization(String[] str){
 		Thread[] threads = new Thread[Common.COUNT_THREADS];
 		for(int i = 0; i < Common.COUNT_THREADS;i++){
-			threads[i] = new Thread(new Lemmer(str, i));
+			threads[i] = new Thread(new Lemmer_old(str, i));
 			threads[i].start();
 		}
 		try{

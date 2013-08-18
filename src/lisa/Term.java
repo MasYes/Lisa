@@ -12,8 +12,8 @@ import java.math.BigInteger;
 public class Term {
 
 	private static BigInteger[][] snsk;
-	private static int height = 1150; //1150
-	private static int width = 200; //200
+	private static int height = 2000; //1150
+	private static int width = 500; //200
 	private static boolean init = false;
 
 
@@ -124,6 +124,7 @@ public class Term {
 				}
 			this.measure = division(res, BigInteger.valueOf(count).pow(this.frequency));
 		}
+		else this.measure = 1;
 	}
 
 	private static double division(BigInteger dividend, BigInteger divider){

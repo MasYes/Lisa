@@ -23,7 +23,7 @@ import java.io.*;
 public class SQLQuery {
 	private static Connection conn;
 	private static String user = "masyes";
-	private static String password = "Snoop";
+	private static String password = "jYbtGf27";
 	private static String url = "localhost";
 	private static String port = "3306";
 	private static String DB = "lisa";

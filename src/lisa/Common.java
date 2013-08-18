@@ -32,24 +32,44 @@ public class Common {
 		}
 	}
 
-	public static void addArticles(String path){
-		File dir = new File(path);
-		File [] files = dir.listFiles();
-		for(File i : files){
-			try{
-				Scanner file = new Scanner(i);
-				String str = "";
-				while(file.hasNext()){
-					str += file.nextLine() + " ";
+	public static void addArticles(){
+		File dir = new File("A:\\articles");
+		File [] folders = dir.listFiles();
+		for(File folder : folders){
+			TemplateStyle tmpl = TemplateStyle.valueOf(
+					folder.toString().substring(
+					folder.toString().lastIndexOf("\\") + 1));
+			File [] files = folder.listFiles();
+			for(File i : files){
+				if (i.toString().endsWith(".txt")){
+					try{
+						Scanner file = new Scanner(i);
+						String str = "";
+						while(file.hasNext()){
+							str += file.nextLine() + " ";
+						}
+						System.out.println(i);
+						str = str.replaceAll("Ё", "Е");
+						str = str.replaceAll("ё", "е");
+						ArticleAbstract art;
+						switch(tmpl){ // Возможно, я сделал что-то не так.
+							case CPS:
+								SQLQuery.saveArticle(new ArticleCPS(str));
+								break;
+							case CYBERLENINKA:
+								SQLQuery.saveArticle(new ArticleCyberleninka(
+										Integer.parseInt(
+												i.toString().substring(i.toString().lastIndexOf("\\") + 1,
+												i.toString().indexOf(".txt"))
+												), str
+								));
+								break;
+						}
+						file.close();
+					} catch (IOException e){
+						Common.createLog(e);
+					}
 				}
-				System.out.println(i);
-				str = str.replaceAll("Ё", "Е");
-				str = str.replaceAll("ё", "е");
-				ArticleCPS art = new ArticleCPS(str);
-				SQLQuery.saveArticle(art);
-				file.close();
-			} catch (IOException e){
-				Common.createLog(e);
 			}
 		}
 	}
@@ -67,8 +87,4 @@ public class Common {
 	public static void computeMeasures(){
 		computeMeasures(1);
 	}
-
-
-
-
 }

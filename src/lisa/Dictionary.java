@@ -39,35 +39,39 @@ public class Dictionary {
 		for(String key: dict.keySet()){
 			Term term = dict.get(key);
 			term.computeMeasure();
-			if(term.getMeasure() < 0.0002)
+			if(term.getMeasure() < 0.0000001)
 				SQLQuery.saveIntoDict(term);
 		}
 	}
 
-	public static void createDict(String path){
-		File dir = new File(path);
-		File [] files = dir.listFiles();
-		for(File i : files){
-			try{
-				System.gc();
-				Scanner file = new Scanner(i);
-				String str = "";
-				while(file.hasNext()){
-					str += file.nextLine() + " ";
+	public static void createDict(){
+		for(String path : new String[]{"A:\\articles\\CPS","A:\\articles\\CYBERLENINKA"}){
+			File dir = new File(path);
+			File [] files = dir.listFiles();
+			for(File i : files){
+				if(i.toString().contains(".lemm")){
+					i.delete();
 				}
-				System.out.println(i);
-				str = str.replaceAll("-", "");
-				str = str.replaceAll("Ё", "Е");
-				str = str.replaceAll("ё", "е");
-				ArticleCPS art = new ArticleCPS(str);
-				str = art.getSense();
-				while(str.contains("  ")){
-					str = str.replace("  ", " ");
+				else if (i.toString().contains(".txt"))
+				try{
+					System.gc();
+					Scanner file = new Scanner(i);
+					String str = "";
+					while(file.hasNext()){
+						str += file.nextLine() + " ";
+					}
+					System.out.println(i);
+					str = str.replaceAll("-", "");
+					str = str.replaceAll("Ё", "Е");
+					str = str.replaceAll("ё", "е");
+					while(str.contains("  ")){
+						str = str.replace("  ", " ");
+					}
+					Dictionary.addToDictionary(Lemmer.lemmer(str));
+					file.close();
+				} catch (Exception e){
+					lisa.Common.createLog(e);
 				}
-				Dictionary.addToDictionary(Lemmer.lemmer(str));
-				file.close();
-			} catch (Exception e){
-				lisa.Common.createLog(e);
 			}
 		}
 		Dictionary.saveDictionary();

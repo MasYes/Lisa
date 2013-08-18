@@ -1,6 +1,7 @@
 import lisa.*;
 import java.util.HashSet;
 import java.io.*;
+import java.util.Scanner;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,12 +17,16 @@ import java.io.*;
  */
 public class Main {
 	public static void main(String[] args){
-		System.out.println(new File("D:\\example.pdf").length());
+
+		Common.addArticles();
+
+//		System.out.println(SQLQuery.getArticleTitle(123));
+		/*System.out.println(new File("D:\\example.pdf").length());
 		System.out.println(new File("D:\\example2.pdf").length());
 		System.out.println(new File("D:\\example3.pdf").length());
 		System.out.println(new File("D:\\example4.pdf").length());
 		System.out.println(new File("D:\\example5.pdf").length());
-		/*
+
 		Article art = new Article("D:\\example4.pdf");
 		for(String i : art.keywords()){
 			if(i!=null)
@@ -33,3 +38,22 @@ public class Main {
 		}*/
 	}
 }
+
+
+
+/*		String path = "A:\\articles\\CPS\\stxt";
+			File dir = new File(path);
+			File [] files = dir.listFiles();
+			int count = 0;
+			for(File i : files){
+				try{
+					if (i.toString().contains(".txt")){
+						String command = "A:\\mystem.exe -w -e utf-8 -l -n " +
+								 i.toString() + " " + i.toString() + ".lemm";
+						java.lang.Runtime.getRuntime().exec(command).waitFor();
+						count++;
+					}
+				} catch (IOException|InterruptedException e){
+					e.printStackTrace();
+				}
+			}*/

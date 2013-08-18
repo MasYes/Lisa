@@ -7,9 +7,5 @@
  */
 package lisa;
 public enum TemplateStyle {
-	NONE(0), CPS(1);
-	private int method;
-	TemplateStyle(int i){
-		this.method = i;
-	}
+	NONE, CPS, CYBERLENINKA
 }
