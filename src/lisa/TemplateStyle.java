@@ -8,4 +8,17 @@
 package lisa;
 public enum TemplateStyle {
 	NONE, CPS, CYBERLENINKA
+	/*protected ArticleAbstract Type(TemplateStyle tmpl, String str){
+		switch(tmpl){
+			case CPS:
+				return new ArticleCPS(str);
+				break;
+			case CYBERLENINKA:
+				return new ArticleCyberleninka(5, str);
+				break;
+			case NONE:
+				return null;
+				break;
+		}
+	}*/
 }

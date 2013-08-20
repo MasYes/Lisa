@@ -14,7 +14,7 @@ package lisa;
 public class Article{
 	public Vector vector;
 	public String text;
-
+	public String udc = "";
 
 	public String[] keywords(){
 		return Keywords.getKeywords(vector);
@@ -51,12 +51,18 @@ public class Article{
 		}
 	}
 
+	public String findUDC(){
+		this.udc = UDC.findCloseUDC(this.vector);
+		return this.udc;
+	}
+
+
 	private void normalize(){//пытается решить проблему с переносами слов
 
 		String[] str = text.split("\n");
 		String res = "";
 		for(String i : str){
-			if(i.charAt(i.length()-2) == '-'){
+			if(i.length() > 3 && i.charAt(i.length()-2) == '-'){
 				res += i.substring(0, i.length() - 2);
 			}
 			else
@@ -66,4 +72,5 @@ public class Article{
 		text = text.replaceAll("ё", "е");
 		text = res.replaceAll("\\p{Punct}", " ");
 	}
+
 }

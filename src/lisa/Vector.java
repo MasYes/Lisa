@@ -24,7 +24,7 @@ public class Vector extends HashMap<Integer, Double> { //Имхо, наслед�
 
 	private double norm = 0.0;
 
-	protected double getNorm(){
+	public double getNorm(){
 		return norm;
 	}
 
@@ -35,7 +35,7 @@ public class Vector extends HashMap<Integer, Double> { //Имхо, наслед�
 		return toVector(str.split(" "));
 	}
 
-/*	private static final long serialVersionUID = -2333077002148210131L; /* На самом деле, это уже лайфхак,
+	private static final long serialVersionUID = -301930882514848718L; /* На самом деле, это уже лайфхак,
 						но с этой штукой нет проблем, когда чуть измененный класс уже не подниамется из дампа.*/
 
 	protected static Vector toVector(String[] str){
@@ -109,7 +109,7 @@ public class Vector extends HashMap<Integer, Double> { //Имхо, наслед�
 		return element;
 	}
 
-	private double angle(Vector a){
+	public double angle(Vector a){
 		return angle(this, a);
 	}
 
@@ -125,6 +125,7 @@ public class Vector extends HashMap<Integer, Double> { //Имхо, наслед�
 	}
 
 	private void normalize(){ // С такой штукой при вычислении углов можно не делить на норму вектора
+		norm = 0.0;
 		for(Integer i : keySet()){
 			norm+= Math.pow(get(i),2);
 		}
@@ -134,6 +135,51 @@ public class Vector extends HashMap<Integer, Double> { //Имхо, наслед�
 		}
 	}
 
+	public static double radToGrad(double rad){
+		return rad*57.295779513;
+	}
+
+	public double distanse(Vector a){
+		return distanse(this, a);
+	}
+
+	public double distanse(Vector a, String udc){
+		Vector vect = SQLQuery.getUDCVector(udc);
+		for(Integer key : SQLQuery.getUDCVector(udc).keySet())
+			vect.put(key, vect.get(key)/SQLQuery.getUDCCount(udc));
+		return distanse(this, a);
+	}
+
+	public Vector add(Vector vect){
+		HashSet<Integer> set = new HashSet<>(this.keySet());
+		set.addAll(vect.keySet());
+		for(Integer i : set){
+			this.put(i, this.at(i)*this.norm + vect.at(i)*vect.norm);
+		}
+		normalize();
+		return this;
+	}
+
+	public static double distanse(Vector a, Vector b){
+		double res = 0;
+		java.util.HashSet<Integer> set = new java.util.HashSet<>(a.keySet());
+		set.addAll(b.keySet());
+		for(Integer i : set){
+			res += Math.pow(a.at(i)*a.norm - b.at(i)*b.norm, 2);
+		}
+		return Math.sqrt(res);
+	}
+
+	public int crossingSize(Vector vect){
+		return crossingSize(this, vect);
+	}
+
+
+	private static int crossingSize(Vector a, Vector b){
+		HashSet<Integer> set = new HashSet<>(a.keySet());
+		set.retainAll(b.keySet());
+		return set.size();
+	}
 
 }
 

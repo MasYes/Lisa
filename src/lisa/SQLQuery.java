@@ -88,6 +88,20 @@ public class SQLQuery {
 		}
 	}
 
+	public static UDC getUDC(String code){
+		try{
+			if(!connected)
+				connect();
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM udc WHERE id=\'" + code + "\'");
+			rs.next();
+			return new UDC(rs.getString("id"), rs.getString("description"),
+					rs.getString("parent"),rs.getString("children"));
+		} catch (SQLException e){
+			return null;
+		}
+	}
+
 	protected static String getEnd(int id){
 		try{
 			if(!connected)
@@ -182,10 +196,12 @@ public class SQLQuery {
 			ps.setString(10, article.getPublication());
 			ps.executeUpdate();
 			ps.close();
+			disconnect();
 		} catch (SQLException e){
 			Common.createLog(e);
 		}
 	}
+
 
 
 
@@ -251,6 +267,20 @@ public class SQLQuery {
 		}
 	}
 
+	protected static String getArticleUDC(int i){
+		try{
+			if(!connected)
+				connect();
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT udc FROM lisa.articles WHERE id=" + i);
+			rs.next();
+			return rs.getString("udc");
+		} catch (SQLException e){
+			Common.createLog(e);
+			return null;
+		}
+	}
+
 
 	public static Vector getArticleVector(int id){
 		try{
@@ -263,6 +293,92 @@ public class SQLQuery {
 		} catch (SQLException e){
 			Common.createLog(e);
 			return null;
+		}
+	}
+
+	public static Vector getUDCVector(String code){
+		try{
+			if(!connected)
+				connect();
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT vector FROM lisa.udc WHERE id=\'" + code + "\';");
+			rs.next();
+			return (Vector) deserialize(stringToArray(rs.getString("vector")));
+		} catch (Exception e){
+			return new Vector();
+		}
+	}
+
+	public static Vector getUDCTerms(String code){
+		try{
+			if(connected)
+				disconnect();
+			if(!connected)
+				connect();
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT terms FROM lisa.udc WHERE id=\'" + code + "\';");
+			rs.next();
+			return (Vector) deserialize(stringToArray(rs.getString("terms")));
+		} catch (Exception e){
+			return new Vector();
+		}
+	}
+
+	public static int getUDCCount(String code){
+		try{
+			if(!connected)
+				connect();
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT count FROM lisa.udc WHERE id=\'" + code + "\';");
+			rs.next();
+			return rs.getInt("count");
+		} catch (Exception e){
+			return 0;
+		}
+	}
+
+	public static void setUDCVector(String id, Vector vector){
+		try{
+			if(!connected)
+				connect();
+			PreparedStatement ps = conn.prepareStatement("UPDATE lisa.udc SET vector=? WHERE id=?;");
+			ps.setString(1, arrayToString(serialize(vector)));
+			ps.setString(2, id);
+			ps.executeUpdate();
+			ps.close();
+			disconnect();
+		} catch (SQLException e){
+			Common.createLog(e);
+		}
+	}
+
+	public static void setUDCTerms(String id, Vector vector){
+		try{
+			if(!connected)
+				connect();
+			PreparedStatement ps = conn.prepareStatement("UPDATE lisa.udc SET terms=? WHERE id=?;");
+			ps.setString(1, arrayToString(serialize(vector)));
+			ps.setString(2, id);
+			ps.executeUpdate();
+			ps.close();
+			disconnect();
+		} catch (SQLException e){
+			Common.createLog(e);
+		}
+	}
+
+	public static void setUDCCount(String id, Integer count){
+		try{
+			if(!connected)
+				connect();
+			PreparedStatement ps = conn.prepareStatement("UPDATE lisa.udc SET count=? WHERE id=?;");
+			ps.setInt(1, count);
+			ps.setString(2, id);
+			ps.executeUpdate();
+			ps.close();
+			disconnect();
+		} catch (SQLException e){
+			Common.createLog(e);
 		}
 	}
 

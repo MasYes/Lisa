@@ -39,7 +39,7 @@ public class Dictionary {
 		for(String key: dict.keySet()){
 			Term term = dict.get(key);
 			term.computeMeasure();
-			if(term.getMeasure() < 0.0000001)
+			if(term.getMeasure() < 0.0001)
 				SQLQuery.saveIntoDict(term);
 		}
 	}

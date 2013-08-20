@@ -53,6 +53,9 @@ public class Common {
 						str = str.replaceAll("ё", "е");
 						ArticleAbstract art;
 						switch(tmpl){ // Возможно, я сделал что-то не так.
+							//Я хочу, чтобы при отсутствующем элементе
+							//он сразу выдавал ошибку, а ему норм ><
+							//либо он дефолта требует
 							case CPS:
 								SQLQuery.saveArticle(new ArticleCPS(str));
 								break;

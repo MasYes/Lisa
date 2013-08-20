@@ -65,11 +65,8 @@ public class Keywords{ //implements Runnable {
 	//В условиях суровых нынешних реалий, поскольку я откинул все "неинтересные слова", то
 	//слово, встречающееся часто в какой-то статье может быне не ключевым, а скучным.
 	protected static String[] getKeywords(Vector vect) {
-		int count = 1000; // искусственно ограничиваю количество возможных ключевых слов на 1 статью.
-		int i = 0;
-		String[] keywords = new String[count];
+		String keywords = "";
 		for(Integer key : vect.keySet()){
-			if(i == count)	break;
 			Term term = SQLQuery.getWordData(key);
 			/*некоторые пробелмы с таким определением ключевых слов могут возникнуть
 			К примеру, если кто-то укажет однажды во введении, что он рассматривает задачу
@@ -86,10 +83,9 @@ public class Keywords{ //implements Runnable {
 			 */
 			if(term.getMeasure() < probability && term.getFrequency()/term.getUnits()>2 &&
 					term.getUnits() < SQLQuery.getCountOfArticles()*0.1 && vect.get(key)*vect.getNorm() > 1){
-				keywords[i] = term.getWord();
-				i++;
+				keywords += term.getWord() + ";";
 			}
 		}
-		return keywords;
+		return keywords.split(";");
 	}
 }

@@ -1,7 +1,9 @@
 import lisa.*;
 import java.util.HashSet;
+import java.util.HashMap;
 import java.io.*;
 import java.util.Scanner;
+import java.util.regex.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,42 +20,36 @@ import java.util.Scanner;
 public class Main {
 	public static void main(String[] args){
 
-		Common.addArticles();
+		 //UDC.computeUDCTerms();
+		//Common.addArticles();
+		//UDC.computeUDCVectors();
+		//UDC.computeUDCTerms();
+//		Vector vect = SQLQuery.getArticleVector(3001);
+		Article art = new Article("A:\\example.pdf");
+		System.out.println(UDC.findCloseUDCTerm(art.vector));
 
-//		System.out.println(SQLQuery.getArticleTitle(123));
-		/*System.out.println(new File("D:\\example.pdf").length());
-		System.out.println(new File("D:\\example2.pdf").length());
-		System.out.println(new File("D:\\example3.pdf").length());
-		System.out.println(new File("D:\\example4.pdf").length());
-		System.out.println(new File("D:\\example5.pdf").length());
+		/*Article art1 = new Article("A:\\example2.pdf");
+		System.out.println(UDC.findCloseUDCTerm(art1.vector));
+		Article art2 = new Article("A:\\example3.pdf");
+		System.out.println(UDC.findCloseUDCTerm(art2.vector));
+		Article art3 = new Article("A:\\example4.pdf");
+		System.out.println(UDC.findCloseUDCTerm(art3.vector));
+		Article art4 = new Article("A:\\example5.pdf");
+		System.out.println(UDC.findCloseUDCTerm(art4.vector));
+		Article art5 = new Article("A:\\example6.pdf");
+		System.out.println(UDC.findCloseUDCTerm(art5.vector));
+		Article art6 = new Article("A:\\example7.pdf");
+		System.out.println(UDC.findCloseUDCTerm(art6.vector));*/
+	}
 
-		Article art = new Article("D:\\example4.pdf");
-		for(String i : art.keywords()){
-			if(i!=null)
-				System.out.println(i);
+
+	private static void Test(){
+		String[] main = new String[]{"", "2", "3", "4", "5", "6", "7", "8"};
+		for(String i : main){
+			System.out.println("___________\n" + i);
+			Article art = new Article("A:\\example" + i + ".pdf");
+			System.out.println(art.findUDC());
 		}
-		for(Integer i : art.findClose()){
-			if(i!=null)
-				System.out.println(SQLQuery.getArticleTitle(i));
-		}*/
 	}
 }
 
-
-
-/*		String path = "A:\\articles\\CPS\\stxt";
-			File dir = new File(path);
-			File [] files = dir.listFiles();
-			int count = 0;
-			for(File i : files){
-				try{
-					if (i.toString().contains(".txt")){
-						String command = "A:\\mystem.exe -w -e utf-8 -l -n " +
-								 i.toString() + " " + i.toString() + ".lemm";
-						java.lang.Runtime.getRuntime().exec(command).waitFor();
-						count++;
-					}
-				} catch (IOException|InterruptedException e){
-					e.printStackTrace();
-				}
-			}*/

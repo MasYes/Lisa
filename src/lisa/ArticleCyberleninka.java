@@ -24,7 +24,7 @@ public class ArticleCyberleninka extends ArticleAbstract {
 			setPublication(in.nextLine().substring(8));
 			setTitle(in.nextLine().substring(5));
 			setAuthor(in.nextLine().substring(9));
-			keywords = in.nextLine();
+			keywords = in.nextLine() + "; id = " + id;
 			String codes = in.nextLine();
 			setMark(-1);
 			setVector(Vector.toVector(str));
