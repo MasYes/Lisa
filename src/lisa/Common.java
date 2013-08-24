@@ -77,6 +77,7 @@ public class Common {
 		}
 	}
 
+	@Deprecated //нужда в этом отпала
 	protected static void computeMeasures(int id){
 		int last = SQLQuery.getCountOfWords();
 		for(int i = id; i <= last; i++){
@@ -87,6 +88,7 @@ public class Common {
 		}
 	}
 
+	@Deprecated
 	public static void computeMeasures(){
 		computeMeasures(1);
 	}

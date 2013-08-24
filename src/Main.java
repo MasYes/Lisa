@@ -19,37 +19,18 @@ import java.util.regex.*;
  */
 public class Main {
 	public static void main(String[] args){
-
-		 //UDC.computeUDCTerms();
-		//Common.addArticles();
-		//UDC.computeUDCVectors();
-		//UDC.computeUDCTerms();
-//		Vector vect = SQLQuery.getArticleVector(3001);
-		Article art = new Article("A:\\example.pdf");
-		System.out.println(UDC.findCloseUDCTerm(art.vector));
-
-		/*Article art1 = new Article("A:\\example2.pdf");
-		System.out.println(UDC.findCloseUDCTerm(art1.vector));
-		Article art2 = new Article("A:\\example3.pdf");
-		System.out.println(UDC.findCloseUDCTerm(art2.vector));
-		Article art3 = new Article("A:\\example4.pdf");
-		System.out.println(UDC.findCloseUDCTerm(art3.vector));
-		Article art4 = new Article("A:\\example5.pdf");
-		System.out.println(UDC.findCloseUDCTerm(art4.vector));
-		Article art5 = new Article("A:\\example6.pdf");
-		System.out.println(UDC.findCloseUDCTerm(art5.vector));
-		Article art6 = new Article("A:\\example7.pdf");
-		System.out.println(UDC.findCloseUDCTerm(art6.vector));*/
-	}
-
-
-	private static void Test(){
-		String[] main = new String[]{"", "2", "3", "4", "5", "6", "7", "8"};
-		for(String i : main){
-			System.out.println("___________\n" + i);
-			Article art = new Article("A:\\example" + i + ".pdf");
-			System.out.println(art.findUDC());
+		Article art = new Article("A:\\example10.pdf");
+		long time = System.currentTimeMillis();
+		Integer[] res = art.findClose();
+		System.out.println(System.currentTimeMillis() - time);
+		for(Integer i : res){
+			if(i == null)
+				break;
+			System.out.println(art.vector.angle(SQLQuery.getArticleVector(i)));
+			System.out.println(SQLQuery.getArticleTitle(i));
+			System.out.println("-----------------------");
 		}
+
 	}
 }
 

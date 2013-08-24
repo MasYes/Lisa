@@ -172,10 +172,10 @@ public class UDC {
 	private static String findCloseUDCAngle(Vector vect){
 		HashSet<Integer> ud = new HashSet<>(vect.keySet());
 		String[] main = new String[]{"0", "1", "2", "3", "5", "6", "7", "8", "9"};
-		String min = "0";
-		String ololo = "60;61;62;63;64;65;66;67;68;69;502/504;51;52;53;54;55;56;57;58;59;631;519;";
-		double value = SQLQuery.getUDCVector("0").angle(vect);
-		for(String i : main){
+		String min = "002";
+		String ololo = "001.1;001.32;001.8;001.9;";
+		double value = SQLQuery.getUDCVector("002").angle(vect);
+		for(String i : ololo.split(";")){
 			if(value > SQLQuery.getUDCVector(i).angle(vect)){
 				value = SQLQuery.getUDCVector(i).angle(vect);
 				min = i;
@@ -201,19 +201,22 @@ public class UDC {
 				while(!udc.children.equals("")){
 					value = -1;
 					for(String str : udc.children.split(";")){
-						if(vect.crossingSize(SQLQuery.getUDCTerms(str)) > value){
-							max = str;
-							value = vect.crossingSize(SQLQuery.getUDCTerms(str));
+						int curr = vect.crossingSize(SQLQuery.getUDCTerms(str));
+						if(curr >= value){
+							if(curr > value || vect.angle(SQLQuery.getUDCTerms(str)) > vect.angle(SQLQuery.getUDCTerms(max))){
+								max = str;
+								value = curr;
+							}
 						}
 					}
-					set.add(value);
+					set.add(vect.crossingSize(SQLQuery.getUDCVector(max)));
 					udc = SQLQuery.getUDC(max);
 				}
 				int sum = 0;
 				for(int key : set)
 					sum+=key;
 				sum = sum / set.size();
-//				System.out.println(i + "  ===  " + set + "  " + sum);
+	//			System.out.println(i + "  ===  " + set + "  " + sum);
 				codes.add(new Code(max, computeProbability(set)));
 			}
 		}
@@ -221,7 +224,7 @@ public class UDC {
 		double aw_an = 0;
 		double aw_pr = 0;
 		for(Code c : codes){
-//			System.out.println("\n" + SQLQuery.getUDC(c.udc).description + "\n" +c.udc + "  ===  " + vect.distanse(SQLQuery.getUDCVector(c.udc), c.udc) + "  ===  " + vect.angle(SQLQuery.getUDCVector(c.udc)) + "  ===  " + vect.crossingSize(SQLQuery.getUDCVector(c.udc)) + "  ===  " + c.likelihood);
+	//		System.out.println("\n" + SQLQuery.getUDC(c.udc).description + "\n" +c.udc + "  ===  " + vect.distanse(SQLQuery.getUDCVector(c.udc), c.udc) + "  ===  " + vect.angle(SQLQuery.getUDCVector(c.udc)) + "  ===  " + vect.crossingSize(SQLQuery.getUDCVector(c.udc)) + "  ===  " + c.likelihood);
 			aw_an += vect.angle(SQLQuery.getUDCVector(c.udc));
 			aw_pr += c.likelihood;
 		}
@@ -229,7 +232,7 @@ public class UDC {
 		aw_pr = aw_pr/9;
 //		System.out.println(aw_an);
 		for(Code c : codes)
-			if(c.likelihood > aw_pr && vect.angle(SQLQuery.getUDCVector(c.udc)) < aw_an)
+			if(c.likelihood >=aw_pr && vect.angle(SQLQuery.getUDCVector(c.udc)) < aw_an)
 				res += c.udc + "  " + SQLQuery.getUDC(c.udc).description + "\n";
 		return res;
 	}
@@ -293,23 +296,21 @@ public class UDC {
 		return min;
 	}
 	protected static String findCloseUDC(Vector vect){
-
-		return "Angle: " + findCloseUDCAngle(vect) + "\nDistance: " + findCloseUDCDistance(vect);
-
+		return findCloseUDCTerm(vect);
 	}
 
 
 	@Deprecated
-	protected static String findCloseUDCOLD(Vector vect){
+	public static String findCloseUDCOLD(Vector vect){
 
 		HashSet<Integer> ud = new HashSet<>(vect.keySet());
-		String[] main = new String[]{"0", "1", "2", "3", "5", "6", "7", "8", "9"};
-		String min_a = "0";
-		String min_d = "0";
-		String max_r = "0";
-		double value_a = SQLQuery.getUDCVector("0").angle(vect);
-		double value_d = SQLQuery.getUDCVector("0").distanse(vect);
-		ud.retainAll(SQLQuery.getUDCVector("0").keySet());
+		String[] main = new String[]{"0", "1", "2", "3", "5", "6", "7", "8"};
+		String min_a = "1";
+		String min_d = "1";
+		String max_r = "1";
+		double value_a = SQLQuery.getUDCVector("1").angle(vect);
+		double value_d = SQLQuery.getUDCVector("1").distanse(vect);
+		ud.retainAll(SQLQuery.getUDCVector("1").keySet());
 		int value_r = ud.size();
 		for(String i : main){
 			if(value_a > SQLQuery.getUDCVector(i).angle(vect)){

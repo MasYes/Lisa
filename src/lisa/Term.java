@@ -38,7 +38,7 @@ public class Term {
 		return frequency;
 	}
 
-	protected double getMeasure(){
+	public double getMeasure(){
 		return measure;
 	}
 
@@ -152,6 +152,22 @@ public class Term {
 			res = res.multiply(BigInteger.valueOf(from));
 		}
 		return res;
+	}
+
+	public static BigInteger computeBigSNSK(int n, int k){
+		//В будущем потребуется, когда оперативки не будет хватать под snsk
+		n--;
+		BigInteger[] mass = new BigInteger[k];
+		for(int i = 0; i < k; i++)
+			mass[i] = BigInteger.ZERO;
+		mass[0] = BigInteger.ONE;
+		for(int i = 0; i < n; i++){
+			System.out.println(i);
+			for(int j = k - 1; j >0; j--){
+				mass[j] = mass[j].multiply(BigInteger.valueOf(j+1)).add(mass[j-1]);
+			}
+		}
+		return mass[k - 1];
 	}
 
 }

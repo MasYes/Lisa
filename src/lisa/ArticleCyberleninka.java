@@ -27,7 +27,7 @@ public class ArticleCyberleninka extends ArticleAbstract {
 			keywords = in.nextLine() + "; id = " + id;
 			String codes = in.nextLine();
 			setMark(-1);
-			setVector(Vector.toVector(str));
+			setVector(Vector.toVector(Lemmer.lemmer(str)));
 			if(codes.contains("УДК:")){
 				setUDC(codes.substring(codes.indexOf("УДК:") + 4));
 			}

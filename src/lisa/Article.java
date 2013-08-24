@@ -22,7 +22,7 @@ public class Article{
 
 
 	public Integer[] findClose(){
-		return this.vector.findClose();
+		return Nearest.findClose(this.vector);
 	}
 
 	public Integer[] nearest(int count){ // находит count ближайших статей.

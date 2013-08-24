@@ -77,8 +77,5 @@ public class Lemmer_old implements Runnable{
 			}
 			curr += Common.COUNT_THREADS;
 		}
-
 	}
-
-
 }

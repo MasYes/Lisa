@@ -23,6 +23,28 @@ public class ArticleCPS extends ArticleAbstract {
 		return references;
 	}
 
+	public ArticleCPS(String str){
+		section = Integer.parseInt(str.substring(str.indexOf("<section>") + 9, str.indexOf("</section>")));
+		setAuthor(str.substring(str.indexOf("<author>") + 8, str.indexOf("</author>")));
+		university = str.substring(str.indexOf("<university>") + 12, str.indexOf("</university>"));
+		setTitle(str.substring(str.indexOf("<title>") + 7, str.indexOf("</title>")));
+		setBody(str.substring(str.indexOf("<body>") + 6, str.indexOf("</body>")));
+		setReferences(str.substring(str.indexOf("<references>") + 12, str.indexOf("</references>")));
+		setTemplate(TemplateStyle.CPS);
+		setVector();
+		setPublication("Процессы управления и устойчивость");
+		setUDC("");
+		setLink("http://www.apmath.spbu.ru/ru/research/conference/pm/archive/");
+		setMark(-1);
+		setLanguage(Language.RU);
+	}
+
+
+	public String getInfo(){
+		return "Университет:" + this.university + "; секция: " + this.section;
+	}
+
+
 
 	@Deprecated
 	public ArticleCPS(String[] str){ //С этим парсером не работает; лучше пользоваться Питоновским для таких случаев.
@@ -53,25 +75,4 @@ public class ArticleCPS extends ArticleAbstract {
 		setReferences(references);
 	}
 
-
-	public ArticleCPS(String str){
-		section = Integer.parseInt(str.substring(str.indexOf("<section>") + 9, str.indexOf("</section>")));
-		setAuthor(str.substring(str.indexOf("<author>") + 8, str.indexOf("</author>")));
-		university = str.substring(str.indexOf("<university>") + 12, str.indexOf("</university>"));
-		setTitle(str.substring(str.indexOf("<title>") + 7, str.indexOf("</title>")));
-		setBody(str.substring(str.indexOf("<body>") + 6, str.indexOf("</body>")));
-		setReferences(str.substring(str.indexOf("<references>") + 12, str.indexOf("</references>")));
-		setTemplate(TemplateStyle.CPS);
-		setVector();
-		setPublication("Процессы управления и устойчивость");
-		setUDC("");
-		setLink("http://www.apmath.spbu.ru/ru/research/conference/pm/archive/");
-		setMark(-1);
-		setLanguage(Language.RU);
-	}
-
-
-	public String getInfo(){
-		return "Университет:" + this.university + "; секция: " + this.section;
-	}
 }

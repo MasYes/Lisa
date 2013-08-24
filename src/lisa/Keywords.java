@@ -57,18 +57,45 @@ public class Keywords{ //implements Runnable {
 		return res;
 	}
 
-	@Deprecated
-	protected static String[] getKeywords(String text) {return new String[]{};}
-
-
-	//@Deprecated // лучше расписать случай, когда слова нет, ибо мб ключевое
+	//Лучше расписать случай, когда слова нет, ибо мб ключевое
 	//В условиях суровых нынешних реалий, поскольку я откинул все "неинтересные слова", то
 	//слово, встречающееся часто в какой-то статье может быне не ключевым, а скучным.
+
 	protected static String[] getKeywords(Vector vect) {
+		//А еще можно считать среднее значение по всем, которые
+		// != 1
+		String res = "";
+
+		double sum = 1;
+		double max = 0;
+		for(Integer i : vect.keySet()){
+			if(vect.get(i)*vect.getNorm() > max)
+				max = vect.get(i)*vect.getNorm()*1.0;
+			sum += vect.get(i)*vect.getNorm();
+			//	System.out.println(SQLQuery.getWordData(i).getWord() + "  ===  " + art.vector.get(i)*art.vector.getNorm());
+		}
+		sum = sum / (vect.keySet().size()*1.0);
+		//	System.out.println(sum);
+		//	System.out.println(max);
+		//	System.out.println(sum+(max-sum)*0.2);
+
+		//Оптимально - 0.2 // 0.559
+		for(Integer i : vect.keySet())
+			if(vect.get(i)*vect.getNorm() > sum+(max-sum)*0.2)
+				res += SQLQuery.getWordData(i).getWord() + ";";
+		return res.split(";");
+	}
+
+
+	protected static String[] getKeywordsOLD(Vector vect) {
 		String keywords = "";
 		for(Integer key : vect.keySet()){
 			Term term = SQLQuery.getWordData(key);
-			/*некоторые пробелмы с таким определением ключевых слов могут возникнуть
+			/*Метод поиска КС изменен, поэтому комментарий не актуален
+
+
+
+			некоторые проблемы с таким определением ключевых слов могут возникнуть
 			К примеру, если кто-то укажет однажды во введении, что он рассматривает задачу
 			информационного поиска. В таком случае ИП - ключевое. С другой стороны, это
 			помогает от "случайного" упоминания слова, которое подозревается в ключеватости.
@@ -81,8 +108,8 @@ public class Keywords{ //implements Runnable {
 			К тому же нужно будет попробовать анализировать "ключеватьсть" слова,
 			основываясь на его положении в тексте.
 			 */
-			if(term.getMeasure() < probability && term.getFrequency()/term.getUnits()>2 &&
-					term.getUnits() < SQLQuery.getCountOfArticles()*0.1 && vect.get(key)*vect.getNorm() > 1){
+			if(term.getMeasure() < probability //&& term.getFrequency()/term.getUnits()>2 &&
+				&&	term.getUnits() < SQLQuery.getCountOfArticles()*0.1 && vect.get(key)*vect.getNorm() > 1){
 				keywords += term.getWord() + ";";
 			}
 		}

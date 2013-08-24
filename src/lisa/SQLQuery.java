@@ -29,38 +29,31 @@ public class SQLQuery {
 	private static String DB = "lisa";
 	private static boolean connected = false;
 
+	private SQLQuery(){}
+//-----------------------------------------------------------------------
+//------------------------------Общие-----------------------------------0
+//-----------------------------------------------------------------------
+
+
 	private static void connect() throws SQLException {
 
-			conn = DriverManager.getConnection(
-					"jdbc:mysql://" + url + ":" + port + "/" + DB,
-					user, password);
-			if (conn == null) {
-				System.out.println("Нет соединения с БД!");
-			}
-			else connected = true;
+	conn = DriverManager.getConnection(
+			"jdbc:mysql://" + url + ":" + port + "/" + DB,
+			user, password);
+	if (conn == null) {
+		System.out.println("Нет соединения с БД!");
 	}
+	else connected = true;
+}
 
 	protected static void disconnect() throws SQLException {
 		//На самом деле я не хотел делать эту функцию, но
-		//если иногда не закрывать соединение, то об]ём используемой
+		//если иногда не закрывать соединение, то объём используемой
 		//оперативки приводит к аутофмемори
 		conn.close();
 		connected = false;
 	}
 
-	private SQLQuery(){}
-
-
-	private static Object deserialize(byte[] array) {
-		try {
-			ByteArrayInputStream is = new ByteArrayInputStream(array);
-			ObjectInputStream objInputStream = new ObjectInputStream(is);
-			return objInputStream.readObject(); //Если класс каст эксепшн, то, скорее всего, класс был изменен, а посему восстановить его нет возможности.
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
 
 	private static byte[] serialize(Object obj) { // ПЕРЕНЕСТИ СЕРИАЛИЗАЦИЮ СЮДА!
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -74,45 +67,16 @@ public class SQLQuery {
 		}
 	}
 
-	protected static String getEnd(String word){
-		try{
-			if(!connected)
-				connect();
-			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM words WHERE word=\'" + word + "\'");
-			rs.next();
-			return rs.getString("ends");
-		} catch (SQLException e){
-			//Common.createLog(e); и это забивает тоже ><
-			return null;
-		}
-	}
 
-	public static UDC getUDC(String code){
-		try{
-			if(!connected)
-				connect();
-			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM udc WHERE id=\'" + code + "\'");
-			rs.next();
-			return new UDC(rs.getString("id"), rs.getString("description"),
-					rs.getString("parent"),rs.getString("children"));
-		} catch (SQLException e){
-			return null;
-		}
-	}
 
-	protected static String getEnd(int id){
-		try{
-			if(!connected)
-				connect();
-			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM ends WHERE id=" + id + ";");
-			rs.next();
-			return rs.getString("ends");
-		} catch (SQLException e){
-			//Common.createLog(e); Не загоняем в соммон крейт лог, поскольку они засоряют весь лог файл ><
-			return "";
+	private static Object deserialize(byte[] array) {
+		try {
+			ByteArrayInputStream is = new ByteArrayInputStream(array);
+			ObjectInputStream objInputStream = new ObjectInputStream(is);
+			return objInputStream.readObject(); //Если класс каст эксепшн, то, скорее всего, класс был изменен, а посему восстановить его нет возможности.
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		}
 	}
 
@@ -131,6 +95,7 @@ public class SQLQuery {
 		return 0;
 	}
 
+
 	protected static Object readDump (String id){
 		try{
 			if(!connected)
@@ -145,6 +110,122 @@ public class SQLQuery {
 		}
 	}
 
+
+	private static String arrayToString(byte[] array){
+		String res = "\'";
+		for(int i = 0; i < array.length; i++){
+			if(array[i] <= 15 && array[i]>=0){
+				res += "0" + Integer.toHexString(array[i] & 0xFF);
+			} else {
+				res +=Integer.toHexString(array[i] & 0xFF);
+			}
+		}
+		res += '\'';
+		return res;
+	}
+
+
+
+	private static byte[] stringToArray(String str){
+		str = str.substring(1, str.length() - 1);
+		byte[] res = new byte[str.length()/2];
+		for(int i = 0; i < str.length(); i = i + 2){
+			res[i/2] = (byte) (Integer.parseInt("" + str.charAt(i) + str.charAt(i + 1), 16) & 0xFF);
+		}
+		return res;
+	}
+
+
+//-----------------------------------------------------------------------
+//------------------------------Статьи----------------------------------1
+//-----------------------------------------------------------------------
+	public static void saveArticle(ArticleAbstract article){
+		try{
+			if(!connected)
+				connect();
+			PreparedStatement ps = conn.prepareStatement("INSERT INTO lisa.articles " +
+					"(author, title, vector, UDC, Template," +
+					"link, mark, language, info,  publication) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+			ps.setString(1, article.getAuthor());
+			ps.setString(2, article.getTitle());
+			ps.setString(3, arrayToString(serialize(article.getVector())));
+			ps.setString(4, article.getUDC());
+			ps.setString(5, article.getTemplate().toString());
+			ps.setString(6, article.getLink());
+			ps.setInt(7, article.getMark());
+			ps.setString(8, article.getLanguage().toString());
+			ps.setString(9, article.getInfo());
+			ps.setString(10, article.getPublication());
+			ps.executeUpdate();
+			ps.close();
+			disconnect();
+		} catch (SQLException e){
+			Common.createLog(e);
+		}
+	}
+
+
+	protected static String getArticleUDC(int i){
+		try{
+			if(!connected)
+				connect();
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT udc FROM lisa.articles WHERE id=" + i);
+			rs.next();
+			return rs.getString("udc");
+		} catch (SQLException e){
+			Common.createLog(e);
+			return null;
+		}
+	}
+
+
+	public static Vector getArticleVector(int id){
+		try{
+			if(!connected)
+				connect();
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT vector FROM lisa.articles WHERE id=" + id);
+			rs.next();
+			return (Vector) deserialize(stringToArray(rs.getString("vector")));
+		} catch (SQLException e){
+			Common.createLog(e);
+			return null;
+		}
+	}
+
+	public static String getArticleTitle(int id){
+		try{
+			if(!connected)
+				connect();
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT title FROM lisa.articles WHERE id=" + id);
+			rs.next();
+			return rs.getString("title");
+		} catch (SQLException e){
+			Common.createLog(e);
+			return null;
+		}
+	}
+
+	protected static int getCountOfArticles(){
+		try{
+			if(!connected)
+				connect();
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT MAX(id) FROM lisa.articles");
+			rs.next();
+			return rs.getInt("MAX(id)");
+		} catch (SQLException e){
+			Common.createLog(e);
+			return -1;
+		}
+	}
+
+
+//-----------------------------------------------------------------------
+//------------------------------Термы-----------------------------------2
+//-----------------------------------------------------------------------
 	protected static void saveIntoDict(String word, int units, int freq, double meas){
 		try{
 			if(!connected)
@@ -177,34 +258,6 @@ public class SQLQuery {
 		}
 	}
 
-	public static void saveArticle(ArticleAbstract article){
-		try{
-			if(!connected)
-				connect();
-			PreparedStatement ps = conn.prepareStatement("INSERT INTO lisa.articles " +
-					"(author, title, vector, UDC, Template," +
-					"link, mark, language, info,  publication) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-			ps.setString(1, article.getAuthor());
-			ps.setString(2, article.getTitle());
-			ps.setString(3, arrayToString(serialize(article.getVector())));
-			ps.setString(4, article.getUDC());
-			ps.setString(5, article.getTemplate().toString());
-			ps.setString(6, article.getLink());
-			ps.setInt(7, article.getMark());
-			ps.setString(8, article.getLanguage().toString());
-			ps.setString(9, article.getInfo());
-			ps.setString(10, article.getPublication());
-			ps.executeUpdate();
-			ps.close();
-			disconnect();
-		} catch (SQLException e){
-			Common.createLog(e);
-		}
-	}
-
-
-
-
 
 	protected static void updateWord(Term term){
 		try{
@@ -220,8 +273,6 @@ public class SQLQuery {
 		} catch (SQLException e){
 			Common.createLog(e);
 		}
-
-
 	}
 
 	public static int getCountOfWords(){
@@ -252,46 +303,35 @@ public class SQLQuery {
 		}
 	}
 
-	@Deprecated
-	protected static ArticleAbstract getArticleData(int i){
+	public static int getIdWord(String word){
 		try{
 			if(!connected)
 				connect();
 			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM lisa.dict WHERE id=" + i);
-			rs.next();
-			return  new ArticleAbstract();
-		} catch (SQLException e){
-			Common.createLog(e);
-			return null;
-		}
-	}
+			ResultSet rs = stmt.executeQuery("SELECT * FROM lisa.dict WHERE word=\"" + word + "\"");
 
-	protected static String getArticleUDC(int i){
-		try{
-			if(!connected)
-				connect();
-			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT udc FROM lisa.articles WHERE id=" + i);
 			rs.next();
-			return rs.getString("udc");
+			return  rs.getInt("id");
 		} catch (SQLException e){
-			Common.createLog(e);
-			return null;
+			//Common.createLog(e); // Если будет забивать логи - убить :D upd убил :D
+			return -1;
 		}
 	}
 
 
-	public static Vector getArticleVector(int id){
+//-----------------------------------------------------------------------
+//------------------------------УДК-------------------------------------3
+//-----------------------------------------------------------------------
+	public static UDC getUDC(String code){
 		try{
 			if(!connected)
 				connect();
 			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT vector FROM lisa.articles WHERE id=" + id);
+			ResultSet rs = stmt.executeQuery("SELECT * FROM udc WHERE id=\'" + code + "\'");
 			rs.next();
-			return (Vector) deserialize(stringToArray(rs.getString("vector")));
+			return new UDC(rs.getString("id"), rs.getString("description"),
+					rs.getString("parent"),rs.getString("children"));
 		} catch (SQLException e){
-			Common.createLog(e);
 			return null;
 		}
 	}
@@ -382,71 +422,88 @@ public class SQLQuery {
 		}
 	}
 
-	public static String getArticleTitle(int id){
+//-----------------------------------------------------------------------
+//------------------------------Группы----------------------------------4
+//-----------------------------------------------------------------------
+
+	protected static void saveGroup(String group, Vector vector){
+		try{
+			if(!connected)
+				connect();
+			PreparedStatement ps = conn.prepareStatement("INSERT INTO lisa.groups " +
+					"(articles, vector) VALUES (?, ?)");
+			ps.setString(1, group);
+			ps.setString(2, arrayToString(serialize(vector)));
+			ps.executeUpdate();
+			ps.close();
+			disconnect();
+		} catch (SQLException e){
+			Common.createLog(e);
+		}
+	}
+
+	protected static String getGroupArticles(int id){
 		try{
 			if(!connected)
 				connect();
 			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT title FROM lisa.articles WHERE id=" + id);
+			ResultSet rs = stmt.executeQuery("SELECT articles FROM lisa.groups WHERE id=\'" + id + "\';");
 			rs.next();
-			return rs.getString("title");
+			return rs.getString("articles");
+		} catch (Exception e){
+			return "";
+		}
+	}
+
+	protected static Vector getGroupVector(int id){
+		try{
+			if(!connected)
+				connect();
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT vector FROM lisa.groups WHERE id=\'" + id + "\';");
+			rs.next();
+			return (Vector) deserialize(stringToArray(rs.getString("vector")));
+		} catch (Exception e){
+			return new Vector();
+		}
+	}
+
+
+//-----------------------------------------------------------------------
+//------------------------------Устаревшие------------------------------5
+//-----------------------------------------------------------------------
+
+
+
+
+	@Deprecated
+	protected static String getEnd(String word){
+		try{
+			if(!connected)
+				connect();
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM words WHERE word=\'" + word + "\'");
+			rs.next();
+			return rs.getString("ends");
 		} catch (SQLException e){
-			Common.createLog(e);
+			//Common.createLog(e); и это забивает тоже ><
 			return null;
 		}
 	}
 
-	public static int getIdWord(String word){
+
+	@Deprecated
+	protected static String getEnd(int id){
 		try{
 			if(!connected)
 				connect();
 			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM lisa.dict WHERE word=\"" + word + "\"");
-
+			ResultSet rs = stmt.executeQuery("SELECT * FROM ends WHERE id=" + id + ";");
 			rs.next();
-			return  rs.getInt("id");
+			return rs.getString("ends");
 		} catch (SQLException e){
-			//Common.createLog(e); // Если будет забивать логи - убить :D upd убил :D
-			return -1;
+			//Common.createLog(e); Не загоняем в соммон крейт лог, поскольку они засоряют весь лог файл ><
+			return "";
 		}
-	}
-
-
-	protected static int getCountOfArticles(){
-		try{
-			if(!connected)
-				connect();
-			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT MAX(id) FROM lisa.articles");
-			rs.next();
-			return rs.getInt("MAX(id)");
-		} catch (SQLException e){
-			Common.createLog(e);
-			return -1;
-		}
-	}
-
-	private static String arrayToString(byte[] array){
-		String res = "\'";
-		for(int i = 0; i < array.length; i++){
-			if(array[i] <= 15 && array[i]>=0){
-				res += "0" + Integer.toHexString(array[i] & 0xFF);
-			} else {
-				res +=Integer.toHexString(array[i] & 0xFF);
-			}
-		}
-		res += '\'';
-		return res;
-	}
-
-
-
-	private static byte[] stringToArray(String str){
-		str = str.substring(1, str.length() - 1);
-		byte[] res = new byte[str.length()/2];
-		for(int i = 0; i < str.length(); i = i + 2){
-			res[i/2] = (byte) (Integer.parseInt("" + str.charAt(i) + str.charAt(i + 1), 16) & 0xFF);
-		}
-		return res;
 	}
 }
