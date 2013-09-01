@@ -15,6 +15,7 @@ public class Lemmer {
 	public static String[] lemmer (String str){ // Возможно, не лучшее решение, но лучшего я еще не придумал
 		File file = new File("A:\\example.txt");
 		try(FileWriter wr = new FileWriter(file)){
+			str = str.toLowerCase();
 			wr.write(str);
 			String command = "A:\\mystem.exe -w -e utf-8 -l -n A:\\example.txt A:\\example_out.txt";
 			wr.close();
@@ -29,6 +30,8 @@ public class Lemmer {
 						curr = curr.substring(0, curr.indexOf("|"));
 					res += curr + ";";
 				}
+				else
+					res += curr.substring(0, curr.length() - 2) + ";";
 			}
 			return res.split(";");
 		} catch (Exception e){

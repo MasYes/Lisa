@@ -18,19 +18,9 @@ import java.util.regex.*;
  * Но так, если в целом, то всё даже работает....
  */
 public class Main {
-	public static void main(String[] args){
-		Article art = new Article("A:\\example10.pdf");
-		long time = System.currentTimeMillis();
-		Integer[] res = art.findClose();
-		System.out.println(System.currentTimeMillis() - time);
-		for(Integer i : res){
-			if(i == null)
-				break;
-			System.out.println(art.vector.angle(SQLQuery.getArticleVector(i)));
-			System.out.println(SQLQuery.getArticleTitle(i));
-			System.out.println("-----------------------");
-		}
-
+	public static void main(String[] args){ //5548
+		Article art = new Article("A:\\example11.pdf");
+		System.out.println(art.findUDC());
 	}
 }
 

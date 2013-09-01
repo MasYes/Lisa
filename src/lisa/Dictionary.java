@@ -38,9 +38,9 @@ public class Dictionary {
 	public static void saveDictionary(){
 		for(String key: dict.keySet()){
 			Term term = dict.get(key);
-			term.computeMeasure();
-			if(term.getMeasure() < 0.0001)
+			if(term.getWord().length() > 2 && term.getWord().length() < 32 && term.getFrequency() >= 5){
 				SQLQuery.saveIntoDict(term);
+			}
 		}
 	}
 
@@ -49,24 +49,23 @@ public class Dictionary {
 			File dir = new File(path);
 			File [] files = dir.listFiles();
 			for(File i : files){
-				if(i.toString().contains(".lemm")){
-					i.delete();
-				}
-				else if (i.toString().contains(".txt"))
+				if (i.toString().contains(".txt"))
 				try{
 					System.gc();
 					Scanner file = new Scanner(i);
 					String str = "";
+					String curr;
 					while(file.hasNext()){
-						str += file.nextLine() + " ";
+						curr = file.nextLine();
+						if(curr.length() > 6 && curr.length() - curr.lastIndexOf("-") < 3){
+							str += curr.substring(0, curr.lastIndexOf("-"));
+						}
+						else
+							str += curr + "\n";
 					}
 					System.out.println(i);
-					str = str.replaceAll("-", "");
 					str = str.replaceAll("Ё", "Е");
 					str = str.replaceAll("ё", "е");
-					while(str.contains("  ")){
-						str = str.replace("  ", " ");
-					}
 					Dictionary.addToDictionary(Lemmer.lemmer(str));
 					file.close();
 				} catch (Exception e){

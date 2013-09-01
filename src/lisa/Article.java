@@ -62,8 +62,8 @@ public class Article{
 		String[] str = text.split("\n");
 		String res = "";
 		for(String i : str){
-			if(i.length() > 3 && i.charAt(i.length()-2) == '-'){
-				res += i.substring(0, i.length() - 2);
+			if(i.length() > 6 && i.length() - i.lastIndexOf("-") < 3){
+				res += i.substring(0, i.lastIndexOf("-"));
 			}
 			else
 				res += i + "\n";
