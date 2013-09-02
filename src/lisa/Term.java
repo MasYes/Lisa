@@ -30,11 +30,11 @@ public class Term {
 		return word;
 	}
 
-	protected int getUnits(){
+	public int getUnits(){
 		return units;
 	}
 
-	protected int getFrequency(){
+	public int getFrequency(){
 		return frequency;
 	}
 

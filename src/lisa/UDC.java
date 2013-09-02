@@ -151,7 +151,9 @@ public class UDC {
 
 		for(int i = 0; i < main.length; i++){
 			for(Integer k: vold[i].keySet()){
-				if(sum.get(k)*0.7 > vold[i].at(k)*vold[i].getNorm() || vold[i].at(k)*vold[i].getNorm() < 7)
+				if(sum.get(k)*0.5 > vold[i].at(k)*vold[i].getNorm() || vold[i].at(k)*vold[i].getNorm() < 10 ||
+						1.0 * SQLQuery.getWordData(k).getUnits() / SQLQuery.getWordData(k).getFrequency() > 0.5||
+						SQLQuery.getWordData(k).getFrequency() > 4700)
 					vnew[i].remove(k);
 			}
 		}
@@ -189,8 +191,6 @@ public class UDC {
 	}
 
 
-
-
 	public static String findCloseUDCTerm(Vector vect){
 		HashSet<Code> codes = new HashSet<>();
 		String[] main = new String[]{"0", "1", "2", "3", "5", "6", "7", "8", "9"};
@@ -204,16 +204,20 @@ public class UDC {
 			if(vect.angle(SQLQuery.getUDCVector(i)) < sum2/9.0){
 		//		System.out.println("Passed " + i);
 				String max = "";
-				int value;
+				double value;
 				UDC udc = SQLQuery.getUDC(i);
 				LinkedHashSet<Integer> set = new LinkedHashSet<>();
 				set.add(SQLQuery.getUDCTerms(i).crossingSize(vect));
 				while(!udc.children.equals("")){
 					value = -1;
 					for(String str : udc.children.split(";")){
-						int curr = vect.crossingSize(SQLQuery.getUDCTerms(str));
+						Vector terms = SQLQuery.getUDCTerms(str);
+						double curr = 0;
+						if(terms.size() > 0 && SQLQuery.getUDCCount(str) > 2){
+							curr = 1.0*vect.crossingSize(terms) / terms.size();
+						}
 						if(curr >= value){
-							if(curr > value || vect.angle(SQLQuery.getUDCTerms(str)) > vect.angle(SQLQuery.getUDCTerms(max))){
+							if(curr > value || vect.angle(terms) > vect.angle(SQLQuery.getUDCTerms(max))){
 								max = str;
 								value = curr;
 							}
@@ -226,21 +230,22 @@ public class UDC {
 				for(int key : set)
 					sum+=key;
 				sum = sum / set.size();
-				System.out.println(i + "  ===  " + set + "  " + sum);
+//				System.out.println(i + "  ===  " + set + "  " + sum);
 				codes.add(new Code(max, computeProbability(set)));
 			}
 		}
 		String res = "";
-		double aw_an = 14.1372;
+		double aw_an = 0;
 		double aw_pr = 0;
 		for(Code c : codes){
-			System.out.println("\n" + SQLQuery.getUDC(c.udc).description + "\n" +c.udc + "  ===  " + vect.distanse(SQLQuery.getUDCVector(c.udc), c.udc) + "  ===  " + vect.angle(SQLQuery.getUDCVector(c.udc)) + "  ===  " + vect.crossingSize(SQLQuery.getUDCVector(c.udc)) + "  ===  " + c.likelihood);
-			aw_an += vect.angle(SQLQuery.getUDCVector(c.udc)) - 1.57;
+//			System.out.println("\n" + SQLQuery.getUDC(c.udc).description + "\n" +c.udc + "  ===  " + vect.distanse(SQLQuery.getUDCVector(c.udc), c.udc) + "  ===  " + vect.angle(SQLQuery.getUDCVector(c.udc)) + "  ===  " + vect.crossingSize(SQLQuery.getUDCVector(c.udc)) + "  ===  " + c.likelihood);
+			aw_an += vect.angle(SQLQuery.getUDCVector(c.udc));
 			aw_pr += c.likelihood;
 		}
-		aw_an = aw_an/9;
+		aw_an = aw_an/codes.size();
 		aw_pr = aw_pr/9;
-		//System.out.println(aw_an);
+//		System.out.println(aw_an);
+//		System.out.println(aw_pr);
 		for(Code c : codes)
 				if(c.likelihood >=aw_pr && vect.angle(SQLQuery.getUDCVector(c.udc)) < aw_an)
 			//if(vect.angle(SQLQuery.getUDCVector(c.udc)) < vect.angle(SQLQuery.getUDCVector(c.udc.substring(0, 1))))

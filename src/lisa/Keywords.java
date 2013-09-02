@@ -81,7 +81,7 @@ public class Keywords{ //implements Runnable {
 
 		//Оптимально - 0.2 // 0.559
 		for(Integer i : vect.keySet())
-			if(vect.get(i)*vect.getNorm() > sum+(max-sum)*0.2)
+			if(vect.get(i)*vect.getNorm() > sum+(max-sum)*0.2 && SQLQuery.getWordData(i).getFrequency() < 13000)
 				res += SQLQuery.getWordData(i).getWord() + ";";
 		return res.split(";");
 	}
