@@ -28,6 +28,10 @@ public class Vector extends HashMap<Integer, Double> { //Имхо, наслед�
 		return norm;
 	}
 
+	protected void setNorm(double num){
+		norm = num;
+	}
+
 	protected static Vector toVector(String str){
 		while(str.contains("  ")){
 			str = str.replace("  ", " ");
@@ -174,6 +178,9 @@ public class Vector extends HashMap<Integer, Double> { //Имхо, наслед�
 		return crossingSize(this, vect);
 	}
 
+	public int crossingSize(Vector vect, int num){
+		return crossingSize(this, vect, num);
+	}
 
 	private static int crossingSize(Vector a, Vector b){
 		HashSet<Integer> set = new HashSet<>(a.keySet());
@@ -181,6 +188,15 @@ public class Vector extends HashMap<Integer, Double> { //Имхо, наслед�
 		return set.size();
 	}
 
+	private static int crossingSize(Vector a, Vector b, int num){
+		int count = 0;
+		for(Integer key : a.keySet()){
+			if(b.keySet().contains(key) && a.getNorm()*a.get(key) >= num){
+				count++;
+			}
+		}
+		return count;
+	}
 }
 
 

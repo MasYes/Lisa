@@ -16,7 +16,7 @@ package lisa;
 
 import java.awt.geom.AffineTransform;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.*;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Scanner;
@@ -32,8 +32,9 @@ import de.intarsys.pdf.pd.PDPageNode;
 import de.intarsys.pdf.pd.PDPageTree;
 import de.intarsys.pdf.tools.kernel.PDFGeometryTools;
 import de.intarsys.tools.stream.StreamTools;
-
-
+import org.apache.poi.hwpf.extractor.WordExtractor;
+import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
+import org.apache.poi.xwpf.usermodel.*;
 /**
  * Extract complete text from document.
  *
@@ -44,11 +45,35 @@ public class ExtractText extends CommonJPodExample{
 		switch(file.substring(file.lastIndexOf("."))){
 			case ".pdf" :	return parsePDF(file);
 			case ".txt" :	return parseTXT(file);
+			case ".doc" :	return parseDOC(file);
+			case ".docx" :	return parseDOCX(file);
 			default : throw new UnsupportedFormatException();
 		}
 	}
 
-	public static String parsePDF(String file) {
+	private static String parseDOC(String file) {
+		try{
+			BufferedInputStream isr = new BufferedInputStream(new FileInputStream(file));
+			WordExtractor word = new WordExtractor(isr);
+			return word.getText();
+		} catch (Exception e) {
+			Common.createLog(e);
+			return "";
+		}
+	}
+
+	private static String parseDOCX(String file) {
+		try{
+			BufferedInputStream isr = new BufferedInputStream(new FileInputStream(file));
+			XWPFWordExtractor word = new XWPFWordExtractor(new XWPFDocument(isr));
+			return word.getText();
+		} catch (Exception e) {
+			Common.createLog(e);
+			return "";
+		}
+	}
+
+	private static String parsePDF(String file) {
 		ExtractText client = new ExtractText();
 		try {
 			return client.run(file);
@@ -58,14 +83,24 @@ public class ExtractText extends CommonJPodExample{
 		}
 	}
 
-	public static String parseTXT(String file) {
+	private static String parseTXT(String file) {
 		File text = new File(file);
 			try{
 				System.gc();
-				Scanner scan = new Scanner(text);
 				String str = "";
-				while(scan.hasNext()){
-					str += scan.nextLine() + "\n";
+				InputStreamReader isr = new InputStreamReader(new FileInputStream(file), "utf-8");
+				BufferedReader reader;
+				reader = new BufferedReader(isr);
+				for (String line; (line = reader.readLine()) != null;) {
+					str+= line + "\n";
+				}
+				if(!str.contains("�"))
+					return str;
+				str = "";
+				isr = new InputStreamReader(new FileInputStream(file), "Windows-1251");
+				reader = new BufferedReader(isr);
+				for (String line; (line = reader.readLine()) != null;) {
+					str+= line + "\n";
 				}
 				return str;
 			}
@@ -75,7 +110,7 @@ public class ExtractText extends CommonJPodExample{
 			}
 	}
 
-	protected void extractText(PDPageTree pageTree, StringBuilder sb) {
+	private void extractText(PDPageTree pageTree, StringBuilder sb) {
 		for (Iterator it = pageTree.getKids().iterator(); it.hasNext();) {
 			PDPageNode node = (PDPageNode) it.next();
 			if (node.isPage()) {
@@ -99,7 +134,7 @@ public class ExtractText extends CommonJPodExample{
 		}
 	}
 
-	protected String extractText(String filename) throws COSVisitorException,
+	private String extractText(String filename) throws COSVisitorException,
 			IOException {
 		PDDocument doc = getDoc();
 		StringBuilder sb = new StringBuilder();

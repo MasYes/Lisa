@@ -20,7 +20,7 @@ public class UDC {
 
 
 
-	private UDC(){
+	protected UDC(){
 		id = "";
 		description = "";
 		parent = "";
@@ -77,6 +77,7 @@ public class UDC {
 		code = code.replaceAll("[\\[:\\]();=*\\?_\\s\\*]", "+");
 		while(code.contains("++"))
 			code = code.replaceAll("\\+\\+", "+");
+		code = code.replaceAll(" ", "+");
 		HashSet<String> set = new HashSet<>();
 		UDC udc = new UDC();
 		for(String i : code.split("\\+")){
@@ -137,6 +138,8 @@ public class UDC {
 		int count = 0;
 		for(String i : main){
 			vold[count] = SQLQuery.getUDCVector(i);
+//			for(Integer k : vold[count].keySet())
+//				vold[count].put(k, vold[count].get(k)/SQLQuery.getUDCCount(i));
 			vnew[count] = SQLQuery.getUDCVector(i);
 			count++;
 		}
@@ -207,14 +210,15 @@ public class UDC {
 				double value;
 				UDC udc = SQLQuery.getUDC(i);
 				LinkedHashSet<Integer> set = new LinkedHashSet<>();
-				set.add(SQLQuery.getUDCTerms(i).crossingSize(vect));
+				set.add(SQLQuery.getUDCTerms(i).crossingSize(vect, 2));
 				while(!udc.children.equals("")){
 					value = -1;
 					for(String str : udc.children.split(";")){
 						Vector terms = SQLQuery.getUDCTerms(str);
 						double curr = 0;
 						if(terms.size() > 0 && SQLQuery.getUDCCount(str) > 2){
-							curr = 1.0*vect.crossingSize(terms) / terms.size();
+							curr = 1.0*Math.log(vect.crossingSize(terms, 2)) / Math.log(terms.size());
+							//curr = 1.0*vect.crossingSize(terms, 2);
 						}
 						if(curr >= value){
 							if(curr > value || vect.angle(terms) > vect.angle(SQLQuery.getUDCTerms(max))){
@@ -223,7 +227,7 @@ public class UDC {
 							}
 						}
 					}
-					set.add(vect.crossingSize(SQLQuery.getUDCVector(max)));
+					set.add(vect.crossingSize(SQLQuery.getUDCTerms(max), 2));
 					udc = SQLQuery.getUDC(max);
 				}
 				int sum = 0;

@@ -12,6 +12,8 @@
     <orderEntry type="library" name="iscwt" level="project" />
     <orderEntry type="library" name="isrt" level="project" />
     <orderEntry type="library" name="jbig2" level="project" />
+    <orderEntry type="library" name="org.apache.poi:poi-scratchpad:3.10-beta1" level="project" />
+    <orderEntry type="library" name="org.apache.poi:poi-ooxml:3.10-beta1" level="project" />
   </component>
 </module>
 

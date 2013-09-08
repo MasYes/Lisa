@@ -67,7 +67,24 @@ public class SQLQuery {
 		}
 	}
 
+	public static String serialize(Vector vect){
+		String res = vect.getNorm() + "!";
+		for(Integer i : vect.keySet()){
+			res += i + ":" + vect.get(i) + ";";
+		}
+		return res;
+	}
 
+	public static Vector deserialize(String str){
+		Vector vect = new Vector();
+		vect.setNorm(Double.parseDouble(str.substring(0, str.indexOf("!"))));
+		str = str.substring(str.indexOf("!") + 1);
+		for(String i : str.split(";")){
+			vect.put(Integer.parseInt(i.substring(0, i.indexOf(":"))),
+					Double.parseDouble(i.substring(i.indexOf(":") + 1)));
+		}
+		return vect;
+	}
 
 	private static Object deserialize(byte[] array) {
 		try {
@@ -139,6 +156,7 @@ public class SQLQuery {
 //-----------------------------------------------------------------------
 //------------------------------Статьи----------------------------------1
 //-----------------------------------------------------------------------
+
 	public static void saveArticle(ArticleAbstract article){
 		try{
 			if(!connected)
@@ -148,7 +166,7 @@ public class SQLQuery {
 					"link, mark, language, info,  publication) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			ps.setString(1, article.getAuthor());
 			ps.setString(2, article.getTitle());
-			ps.setString(3, arrayToString(serialize(article.getVector())));
+			ps.setString(3, serialize(article.getVector()));
 			ps.setString(4, article.getUDC());
 			ps.setString(5, article.getTemplate().toString());
 			ps.setString(6, article.getLink());
@@ -187,7 +205,7 @@ public class SQLQuery {
 			Statement stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT vector FROM lisa.articles WHERE id=" + id);
 			rs.next();
-			return (Vector) deserialize(stringToArray(rs.getString("vector")));
+			return deserialize(rs.getString("vector"));
 		} catch (SQLException e){
 			Common.createLog(e);
 			return null;
@@ -324,6 +342,7 @@ public class SQLQuery {
 //-----------------------------------------------------------------------
 	public static UDC getUDC(String code){
 		try{
+			System.out.println(code);
 			if(!connected)
 				connect();
 			Statement stmt = conn.createStatement();
@@ -332,7 +351,9 @@ public class SQLQuery {
 			return new UDC(rs.getString("id"), rs.getString("description"),
 					rs.getString("parent"),rs.getString("children"));
 		} catch (SQLException e){
-			return null;
+			if(!code.equals(""))
+				Common.createLog(e);
+			return new UDC();
 		}
 	}
 
@@ -343,7 +364,7 @@ public class SQLQuery {
 			Statement stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT vector FROM lisa.udc WHERE id=\'" + code + "\';");
 			rs.next();
-			return (Vector) deserialize(stringToArray(rs.getString("vector")));
+			return deserialize(rs.getString("vector"));
 		} catch (Exception e){
 			return new Vector();
 		}
@@ -358,7 +379,7 @@ public class SQLQuery {
 			Statement stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT terms FROM lisa.udc WHERE id=\'" + code + "\';");
 			rs.next();
-			return (Vector) deserialize(stringToArray(rs.getString("terms")));
+			return deserialize(rs.getString("terms"));
 		} catch (Exception e){
 			return new Vector();
 		}
@@ -382,7 +403,7 @@ public class SQLQuery {
 			if(!connected)
 				connect();
 			PreparedStatement ps = conn.prepareStatement("UPDATE lisa.udc SET vector=? WHERE id=?;");
-			ps.setString(1, arrayToString(serialize(vector)));
+			ps.setString(1, serialize(vector));
 			ps.setString(2, id);
 			ps.executeUpdate();
 			ps.close();
@@ -397,7 +418,7 @@ public class SQLQuery {
 			if(!connected)
 				connect();
 			PreparedStatement ps = conn.prepareStatement("UPDATE lisa.udc SET terms=? WHERE id=?;");
-			ps.setString(1, arrayToString(serialize(vector)));
+			ps.setString(1, serialize(vector));
 			ps.setString(2, id);
 			ps.executeUpdate();
 			ps.close();
@@ -425,7 +446,6 @@ public class SQLQuery {
 //-----------------------------------------------------------------------
 //------------------------------Группы----------------------------------4
 //-----------------------------------------------------------------------
-
 	protected static void saveGroup(String group, Vector vector){
 		try{
 			if(!connected)
@@ -433,7 +453,7 @@ public class SQLQuery {
 			PreparedStatement ps = conn.prepareStatement("INSERT INTO lisa.groups " +
 					"(articles, vector) VALUES (?, ?)");
 			ps.setString(1, group);
-			ps.setString(2, arrayToString(serialize(vector)));
+			ps.setString(2, serialize(vector));
 			ps.executeUpdate();
 			ps.close();
 			disconnect();
@@ -462,7 +482,7 @@ public class SQLQuery {
 			Statement stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT vector FROM lisa.groups WHERE id=\'" + id + "\';");
 			rs.next();
-			return (Vector) deserialize(stringToArray(rs.getString("vector")));
+			return deserialize(rs.getString("vector"));
 		} catch (Exception e){
 			return new Vector();
 		}

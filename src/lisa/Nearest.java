@@ -9,14 +9,15 @@ import java.util.HashSet;
  * Date: 23.08.13
  * Time: 14:40
  * To change this template use File | Settings | File Templates.
+ * CREATE TABLE lisa.groups(id int primary key auto_increment, articles text, vector long binary);
  */
 public class Nearest {
-	private static double diffrence = 1.53; //1.54
+	private static double diffrence = 1.4; //1.54
 	private static int MAXcount = 300; //300
-	private static int count = 234;
-	private static double step = 0.175/10; //Примерно 10 градусов //10
+	private static int count = 200;
+	private static double step = 0.3; //Примерно 10 градусов //10
 	private static String[][] mass = new String[MAXcount][(int)(1.57/step) + 2];
-	private static double closeness = 1.23;
+	private static double closeness = 1.0;
 
 	public static void createBasis(){
 		//Возможно потребуется переписать
