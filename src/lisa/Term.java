@@ -54,7 +54,7 @@ public class Term {
 		units++;
 	}
 
-	protected Term (String str, int freq){
+	public Term (String str, int freq){
 		word = str;
 		units = 1;
 		frequency = freq;

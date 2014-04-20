@@ -1,12 +1,12 @@
+import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import lisa.*;
-import java.util.HashSet;
-import java.util.HashMap;
-import java.io.*;
-import java.util.Scanner;
-import java.util.regex.*;
+
 import java.lang.* ;
-import java.nio.charset.Charset;
-import org.apache.poi.hwpf.extractor.WordExtractor;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+
+
 /**
  * Created with IntelliJ IDEA.
  * User: masyes
@@ -20,8 +20,11 @@ import org.apache.poi.hwpf.extractor.WordExtractor;
  * Но так, если в целом, то всё даже работает....
  */
 public class Main {
-	public static void main(String[] args){ //5548
-		Nearest.createBasis();
+	public static void main(String[] args)throws Exception{
+		//MulticlassSVM.test();
+		//LDA lda = new LDA(1, 0.01, 50);
+		TopicClassifier.test();
 	}
 }
+
 

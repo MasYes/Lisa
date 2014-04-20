@@ -51,34 +51,34 @@ public class ExtractText extends CommonJPodExample{
 		}
 	}
 
-	private static String parseDOC(String file) {
+	protected static String parseDOC(String file) {
 		try{
 			BufferedInputStream isr = new BufferedInputStream(new FileInputStream(file));
 			WordExtractor word = new WordExtractor(isr);
 			return word.getText();
 		} catch (Exception e) {
-			Common.createLog(e);
+//			Common.createLog(e);
 			return "";
 		}
 	}
 
-	private static String parseDOCX(String file) {
+	protected static String parseDOCX(String file) {
 		try{
 			BufferedInputStream isr = new BufferedInputStream(new FileInputStream(file));
 			XWPFWordExtractor word = new XWPFWordExtractor(new XWPFDocument(isr));
 			return word.getText();
 		} catch (Exception e) {
-			Common.createLog(e);
+//			Common.createLog(e);
 			return "";
 		}
 	}
 
-	private static String parsePDF(String file) {
+	protected static String parsePDF(String file) {
 		ExtractText client = new ExtractText();
 		try {
 			return client.run(file);
 		} catch (Exception e) {
-			Common.createLog(e);
+//			Common.createLog(e);
 			return "";
 		}
 	}

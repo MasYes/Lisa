@@ -10,7 +10,7 @@ package lisa;
 
 import java.io.Serializable;
 
-class ArticleAbstract implements Serializable, ArticleInterface{
+abstract class ArticleAbstract implements Serializable, ArticleInterface{
 	private int mark;
 	private String link;
 	private String author;

@@ -12,37 +12,93 @@ package lisa;
  * НЕ ЗАБЫВАТЬ МЕНЯТЬ Ё НА Е
  */
 
-import java.io.File;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+
+import java.io.*;
 import java.util.*;
 
 
 public class Dictionary {
-	protected static HashMap<String, Term> dict = new HashMap<>();
+	protected static Int2ObjectOpenHashMap<Term> dict = new Int2ObjectOpenHashMap<>();
+	protected static Object2IntOpenHashMap<String> indexes= new Object2IntOpenHashMap<>();
+	protected static ArrayList<ArticleYandex> articles = new ArrayList<>();
+	private static String rank;
+	private static String udc;
+
+//	private static HashSet<String> dict = SQLQuery.getWordsFromDict("dict_urls");
+
+	private static void addArticle(Vector vector){
+//		System.out.println("Articles size = " + articles.size());
+		vector.normalize();
+		articles.add(new ArticleYandex(udc, rank, vector));
+		if(articles.size() >= 100){
+			SQLQuery.saveArticlesYandex(articles);
+			articles.clear();
+		}
+	}
 
 	private static void addToDictionary(String[] str){
 		ArrayList<String> array = new ArrayList<>();
 		array.addAll(Arrays.asList(str)); //еще не определился, как лучше - так, или в конатрукторе сразу привести к такому виду.
 		HashSet<String> set = new HashSet<>(array);
 		set.remove("");
+	//	Vector vector = new Vector();
 		for(String i : set){
-			if(dict.containsKey(i)){
-				dict.get(i).incrementUnits();
-				dict.get(i).addToFrequency(Collections.frequency(array, i));
+			if(indexes.containsKey(i)){
+				int frequency = Collections.frequency(array, i);
+				int id = indexes.get(i);
+	//			vector.put(id, frequency);
+				dict.get(id).incrementUnits();
+				dict.get(id).addToFrequency(frequency);
 			}
 			else{
-				dict.put(i, new Term(i, Collections.frequency(array, i) ));
+				int frequency = Collections.frequency(array, i);
+				indexes.put(i, indexes.size() + 1);
+				dict.put(indexes.get(i), new Term(i, Collections.frequency(array, i) ));
+	//			vector.put(indexes.get(i), frequency);
 			}
 		}
+	//	addArticle(vector);
 	}
 
+	/*private static void addToDictionary(String[] str){
+		for(String i : str){
+			if(i.matches("[А-Яа-я]*"))
+				if(dict.add(i))
+					System.out.println(i);
+		}
+	}*/
+
 	public static void saveDictionary(){
-		for(String key: dict.keySet()){
+		ArrayList<Term> terms = new ArrayList<>();
+		for(int key: dict.keySet()){
 			Term term = dict.get(key);
 			if(term.getWord().length() > 2 && term.getWord().length() < 32 && term.getFrequency() >= 5){
-				SQLQuery.saveIntoDict(term);
+				terms.add(term);
+			}
+			if(terms.size() >= 5000){
+				SQLQuery.saveIntoDict(terms);
+				terms = new ArrayList<>();
 			}
 		}
+		SQLQuery.saveIntoDict(terms);
+		SQLQuery.saveArticlesYandex(articles);
 	}
+
+	/*public static void saveDictionary(){
+		ArrayList<Term> terms = new ArrayList<>();
+		for(String term: dict){
+			if(term.length() > 2 && term.length() < 32){
+				terms.add(new Term(term));
+			}
+			if(terms.size() >= 5000){
+				SQLQuery.saveIntoDict(terms);
+				terms = new ArrayList<>();
+			}
+		}
+		SQLQuery.saveIntoDict(terms);
+	}*/
 
 	public static void createDict(){
 		for(String path : new String[]{"A:\\articles\\CPS","A:\\articles\\CYBERLENINKA"}){
@@ -74,6 +130,71 @@ public class Dictionary {
 			}
 		}
 		Dictionary.saveDictionary();
+	}
+
+
+	public static void createDictFromURLS(){
+		for(int i = 1; i <= SQLQuery.getURLCount(); i++){
+			System.out.println(i);
+			try{
+				String str = SQLQuery.getURLText(i);
+				if(str != null){
+					str = str.replaceAll("Ё", "Е");
+					str = str.replaceAll("ё", "е");
+					Dictionary.addToDictionary(Lemmer.lemmer(str));
+				}
+			} catch (Exception e){
+				lisa.Common.createLog(e);
+			}
+		}
+		Dictionary.saveDictionary();
+	}
+
+	public static void createDictFromYandex(){
+		try{
+		File dir = new File("A:\\articles\\YANDEX");
+		for(File folder : dir.listFiles()){
+			long time = System.currentTimeMillis();
+			if(folder.isDirectory()){
+				ArrayList<ReadArticleYandex> readers = new ArrayList<>();
+				ArrayList<Thread> threads = new ArrayList<>();
+				System.out.println(folder.getAbsolutePath());
+				for(File article : folder.listFiles()){
+					try{
+						if(article.getName().endsWith("_lemm.txt")){
+							readers.add(new ReadArticleYandex(article));
+							threads.add(new Thread(readers.get(readers.size() - 1)));
+							threads.get(threads.size() - 1).setDaemon(true);
+							threads.get(readers.size() - 1).run();
+						}
+						if(article.getName().equals("udc.txt")){
+							BufferedReader reader = new BufferedReader(new FileReader(article));
+							udc = reader.readLine();
+							reader.close();
+						}
+					}catch(Exception e){
+						e.printStackTrace();
+					}
+				}
+//				System.out.println(readers.size());
+				for(int i = 0; i < threads.size(); i++){
+					while(threads.get(i).isAlive()){
+
+					}
+					String filename = readers.get(i).file.getAbsolutePath();
+					filename = filename.substring(0, filename.length() - 4) + "_oneline.txt";
+					FileWriter fw = new FileWriter(filename);
+					String result = readers.get(i).result;
+					fw.write(result);
+					fw.close();
+				}
+				System.out.println((System.currentTimeMillis() - time)/1000.0 + "\n" + articles.size());
+			}
+		}
+	//	Dictionary.saveDictionary();
+	}catch(Throwable t){
+	//		Dictionary.saveDictionary();
+		}
 	}
 }
 

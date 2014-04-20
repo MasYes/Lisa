@@ -7,16 +7,19 @@ package lisa;
  * Time: 14:11
  * To change this template use File | Settings | File Templates.
  */
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.Scanner;
 
 public class UDC {
 	private String id;
 	private String description;
 	private String parent;
 	private String children;
-//	protected Vector vector; надо ли?
 
 
 
@@ -128,6 +131,34 @@ public class UDC {
 		}
 	}
 
+	public static void computeUDCVectorsFromURL(){
+		HashMap<String, Integer> counts = new HashMap<>();
+		HashMap<String, Vector> udc = new HashMap<>();
+		int count = SQLQuery.getURLCount();
+		for(int i = 1; i <= count; i++){
+			System.out.println(i);
+			if(i%1000 == 0){
+				try{
+					SQLQuery.disconnect();
+				}catch(Exception e){}
+			}
+			for(String str : normalize(SQLQuery.getArticleUDC(i))){
+				if(udc.containsKey(str)){
+					udc.put(str, udc.get(str).add(SQLQuery.getArticleVector(i)));
+					counts.put(str, counts.get(str) + 1);
+				}
+				else{
+					udc.put(str, SQLQuery.getArticleVector(i));
+					counts.put(str, 1);
+				}
+			}
+		}
+		for(String str : udc.keySet()){
+			SQLQuery.setUDCVector(str, udc.get(str));
+			SQLQuery.setUDCCount(str, counts.get(str));
+		}
+	}
+
 	public static void computeUDCTerms(){
 		computeUDCTerms(new String[]{"0", "1", "2", "3", "5", "6", "7", "8", "9"});
 	}
@@ -147,7 +178,7 @@ public class UDC {
 		Vector sum = new Vector();
 
 		for(int i = 0; i < main.length; i++){
-			for(Integer k: vold[i].keySet()){
+			for(int k: vold[i].keySet()){
 				sum.put(k, sum.at(k) + vold[i].at(k)*vold[i].getNorm());
 			}
 		}
@@ -286,7 +317,7 @@ public class UDC {
 
 
 		for(int i = 0; i < main.length; i++){
-			for(Integer k: vold[i].keySet()){
+			for(int k: vold[i].keySet()){
 				sum.put(k, sum.at(k) + vold[i].at(k)*vold[i].getNorm());
 			}
 		}
@@ -307,7 +338,7 @@ public class UDC {
 		double value = SQLQuery.getUDCVector("0").distanse(vect);
 		for(String i : main){
 			Vector vect1 = SQLQuery.getUDCVector(i);
-			for(Integer num : SQLQuery.getUDCVector(i).keySet())
+			for(int num : SQLQuery.getUDCVector(i).keySet())
 				vect1.put(num, vect1.get(num)/SQLQuery.getUDCCount(i));
 			if(value > vect.distanse(vect1)){
 				value = vect.distanse(vect1);
@@ -346,7 +377,7 @@ public class UDC {
 			}
 
 			Vector vect1 = SQLQuery.getUDCVector(i);
-			for(Integer num : SQLQuery.getUDCVector(i).keySet())
+			for(int num : SQLQuery.getUDCVector(i).keySet())
 				vect1.put(num, vect1.get(num)/SQLQuery.getUDCCount(i));
 			if(value_d > vect.distanse(vect1)){
 				value_d = vect.distanse(vect1);
@@ -368,6 +399,42 @@ public class UDC {
 		}
 		return res/set.size();
 	}
+
+
+	public static void addURLs(){
+		HashSet<String> set = new HashSet<>();
+		File dir = new File("A:\\GoogleResults");
+		File [] files = dir.listFiles();
+		for(File i : files){
+			if(i.toString().contains("_res.txt")){
+				String url = "";
+				try{
+					Scanner scan = new Scanner(new FileInputStream(i));
+					while(scan.hasNext()){
+						url += scan.nextLine() + ";";
+					}
+					scan.close();
+
+					scan = new Scanner(new FileInputStream("A:\\GoogleResultsWithUDC\\" +
+							i.toString().substring(i.toString().lastIndexOf("\\") + 1)));
+					while(scan.hasNext()){
+						url += scan.nextLine() + ";";
+					}
+					scan.close();
+					for(String str : url.split(";")){
+						set.add(str);
+					}
+					SQLQuery.setUDCURL(i.toString().substring(17, i.toString().length() - 8), url);
+				}
+				catch(FileNotFoundException e){
+						System.out.println("Всё совсем плохо :(");
+					}
+			}
+		}
+		SQLQuery.saveURL(set);
+	}
+
+
 
 	private static class Code{
 		String udc;

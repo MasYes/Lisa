@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="isrt">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/extrlib/isrt.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

@@ -14,14 +14,16 @@ package lisa;
  *
  */
 
+import it.unimi.dsi.fastutil.ints.Int2DoubleOpenHashMap;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Arrays;
 
-public class Vector extends HashMap<Integer, Double> { //Имхо, наследовать было рационально, ибо создавать класс с 1 полем и оперировать им - не круто.
-
+public class Vector extends Int2DoubleOpenHashMap { //Имхо, наследовать было рационально, ибо создавать класс с 1 полем и оперировать им - не круто.
+	//Java вообще няшка - поменял HashMap<Integer, Double> на это, и всё вообще ок!
 	private double norm = 0.0;
 
 	public double getNorm(){
@@ -128,13 +130,13 @@ public class Vector extends HashMap<Integer, Double> { //Имхо, наслед�
 		return Math.acos(dotProduct); //so, with /(Math.PI/2) this function return double in [0;1]
 	}
 
-	private void normalize(){ // С такой штукой при вычислении углов можно не делить на норму вектора
+	protected void normalize(){ // С такой штукой при вычислении углов можно не делить на норму вектора
 		norm = 0.0;
 		for(Integer i : keySet()){
 			norm+= Math.pow(get(i),2);
 		}
 		norm = Math.sqrt(norm);
-		for(Integer i : keySet()){
+		for(int i : keySet()){
 			put(i, get(i)/norm);
 		}
 	}
@@ -149,7 +151,7 @@ public class Vector extends HashMap<Integer, Double> { //Имхо, наслед�
 
 	public double distanse(Vector a, String udc){
 		Vector vect = SQLQuery.getUDCVector(udc);
-		for(Integer key : SQLQuery.getUDCVector(udc).keySet())
+		for(int key : SQLQuery.getUDCVector(udc).keySet())
 			vect.put(key, vect.get(key)/SQLQuery.getUDCCount(udc));
 		return distanse(this, a);
 	}
@@ -157,7 +159,7 @@ public class Vector extends HashMap<Integer, Double> { //Имхо, наслед�
 	public Vector add(Vector vect){
 		HashSet<Integer> set = new HashSet<>(this.keySet());
 		set.addAll(vect.keySet());
-		for(Integer i : set){
+		for(int i : set){
 			this.put(i, this.at(i)*this.norm + vect.at(i)*vect.norm);
 		}
 		normalize();

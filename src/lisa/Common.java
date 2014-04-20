@@ -77,6 +77,23 @@ public class Common {
 		}
 	}
 
+	public static void addURLs(){
+		for(int i = 10900; i < SQLQuery.getURLCount(); i++){
+			try{
+				String str = SQLQuery.getURLText(i);
+				System.out.println(i);
+				if(str!=null){
+					str = str.replaceAll("Ё", "Е");
+					str = str.replaceAll("ё", "е");
+					SQLQuery.setURLVector(i, Vector.toVector(Lemmer.lemmer(str)));
+				}
+			} catch (Exception e){
+				Common.createLog(e);
+			}
+		}
+	}
+
+
 	@Deprecated //нужда в этом отпала
 	protected static void computeMeasures(int id){
 		int last = SQLQuery.getCountOfWords();

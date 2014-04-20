@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="jPod">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/extrlib/jPod.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

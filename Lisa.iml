@@ -8,12 +8,14 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="mysql-connector-java-5.1.25-bin" level="project" />
-    <orderEntry type="library" name="jPod" level="project" />
-    <orderEntry type="library" name="iscwt" level="project" />
-    <orderEntry type="library" name="isrt" level="project" />
     <orderEntry type="library" name="jbig2" level="project" />
     <orderEntry type="library" name="org.apache.poi:poi-scratchpad:3.10-beta1" level="project" />
     <orderEntry type="library" name="org.apache.poi:poi-ooxml:3.10-beta1" level="project" />
+    <orderEntry type="library" name="net.sourceforge.htmlunit:htmlunit:2.13" level="project" />
+    <orderEntry type="library" name="it.unimi.dsi:fastutil:6.5.13" level="project" />
+    <orderEntry type="library" name="nz.ac.waikato.cms.weka:weka-dev:3.7.10" level="project" />
+    <orderEntry type="library" name="nz.ac.waikato.cms.weka:LibSVM:1.0.5" level="project" />
+    <orderEntry type="library" name="de.intarsys.opensource:jPod:5.5.1" level="project" />
   </component>
 </module>
 

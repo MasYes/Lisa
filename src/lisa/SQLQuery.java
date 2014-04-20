@@ -15,9 +15,16 @@ package lisa;
  *
  */
 
+import com.mysql.jdbc.PacketTooBigException;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
+
+import java.net.URLDecoder;
 import java.sql.*;
 import java.io.*;
-
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 
 public class SQLQuery {
@@ -153,6 +160,7 @@ public class SQLQuery {
 	}
 
 
+
 //-----------------------------------------------------------------------
 //------------------------------Статьи----------------------------------1
 //-----------------------------------------------------------------------
@@ -182,6 +190,44 @@ public class SQLQuery {
 		}
 	}
 
+	public static void saveArticlesYandex(ArrayList<ArticleYandex> articles){
+		try{
+			if(!connected)
+				connect();
+			String query = "INSERT INTO lisa.articleYandex (udc, rank, vector) VALUES ";
+			for(ArticleYandex article : articles){
+				query += "('" + article.udc + "'," + article.rank + ",'" + serialize(article.vector) + "'),";
+			}
+
+			System.out.println("Saving articles");
+
+			PreparedStatement ps = conn.prepareStatement(query.substring(0, query.length() - 1) + ";");
+
+			ps.executeUpdate();
+			ps.close();
+			disconnect();
+		} catch (SQLException e){
+			Common.createLog(e);
+		}
+	}
+
+	public static ArrayList<ArticleYandex> getArticlesYandex(String where){
+		try{
+			if(!connected)
+				connect();
+			ArrayList<ArticleYandex> result = new ArrayList<>();
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM lisa.articleYandex WHERE " + where + ";");
+			while(rs.next()){
+				result.add(new ArticleYandex(rs.getString("udc"), rs.getString("rank"), deserialize(rs.getString("vector"))));
+			}
+			return result;
+		} catch (SQLException e){
+			Common.createLog(e);
+			return new ArrayList<>();
+		}
+	}
+
 
 	protected static String getArticleUDC(int i){
 		try{
@@ -191,6 +237,20 @@ public class SQLQuery {
 			ResultSet rs = stmt.executeQuery("SELECT udc FROM lisa.articles WHERE id=" + i);
 			rs.next();
 			return rs.getString("udc");
+		} catch (SQLException e){
+			Common.createLog(e);
+			return null;
+		}
+	}
+
+	protected static String getArticleInfo(int i){
+		try{
+			if(!connected)
+				connect();
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT info FROM lisa.articles WHERE id=" + i);
+			rs.next();
+			return rs.getString("info");
 		} catch (SQLException e){
 			Common.createLog(e);
 			return null;
@@ -260,15 +320,17 @@ public class SQLQuery {
 		}
 	}
 
-	protected static void saveIntoDict(Term term){
+	protected static void saveIntoDict(ArrayList<Term> terms){
 		try{
 			if(!connected)
 				connect();
-			PreparedStatement ps = conn.prepareStatement("INSERT INTO dict (word, units, freq, meas) VALUES (?, ?, ?, ?)");
-			ps.setString(1, term.getWord());
-			ps.setInt(2, term.getUnits());
-			ps.setInt(3, term.getFrequency());
-			ps.setDouble(4, term.getMeasure());
+			String query = "INSERT INTO dict (id, word, units, freq, meas) VALUES ";
+			for(Term term : terms){
+				query+="(" + Dictionary.indexes.getInt(term.getWord()) + ",'" + term.getWord() + "'," + term.getUnits() + "," + term.getFrequency() + "," + term.getMeasure() + "),";
+			}
+//			System.out.println(query);
+			query = query.substring(0, query.length() - 1) + ";";
+			PreparedStatement ps = conn.prepareStatement(query);
 			ps.executeUpdate();
 			ps.close();
 		} catch (SQLException e){
@@ -323,6 +385,8 @@ public class SQLQuery {
 
 	public static int getIdWord(String word){
 		try{
+			if(connected)
+				disconnect();
 			if(!connected)
 				connect();
 			Statement stmt = conn.createStatement();
@@ -336,13 +400,32 @@ public class SQLQuery {
 		}
 	}
 
+	public static HashSet<String> getWordsFromDict(String dict){
+		try{
+			if(!connected)
+				connect();
+			HashSet<String> set = new HashSet<>();
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT word FROM lisa." + dict + ";");
+
+			while(rs.next()){
+				set.add(rs.getString("word"));
+			}
+
+			return set;
+
+		} catch (SQLException e){
+			//Common.createLog(e); // Если будет забивать логи - убить :D upd убил :D
+			return new HashSet<>();
+		}
+	}
+
 
 //-----------------------------------------------------------------------
 //------------------------------УДК-------------------------------------3
 //-----------------------------------------------------------------------
 	public static UDC getUDC(String code){
 		try{
-			System.out.println(code);
 			if(!connected)
 				connect();
 			Statement stmt = conn.createStatement();
@@ -443,6 +526,91 @@ public class SQLQuery {
 		}
 	}
 
+	public static void setUDCURL(String id, String url){
+		try{
+			if(!connected)
+				connect();
+			PreparedStatement ps = conn.prepareStatement("UPDATE lisa.udc SET url=? WHERE id=?;");
+			ps.setString(1, url);
+			ps.setString(2, id);
+			ps.executeUpdate();
+			ps.close();
+			disconnect();
+		} catch (SQLException e){
+			Common.createLog(e);
+		}
+	}
+
+	protected static ArrayList<String> getDistinctParents(){
+		try{
+			if(!connected)
+				connect();
+			ArrayList<String> results = new ArrayList<>();
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT DISTINCT(parent) FROM lisa.udc");
+			while(rs.next()){
+				results.add(rs.getString("parent"));
+			}
+			return results;
+		} catch (Exception e){
+			Common.createLog(e);
+			return new ArrayList<>();
+		}
+	}
+
+
+	public static HashMap<String, String> getUDCURLByParent(String parent){
+		try{
+			if(!connected)
+				connect();
+			HashMap<String, String> results = new HashMap<>();
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT id, url FROM lisa.udc WHERE parent = '" + parent + "';");
+			while(rs.next()){
+				results.put(rs.getString("id"), rs.getString("url"));
+			}
+			return results;
+		} catch (Exception e){
+			Common.createLog(e);
+			return new HashMap<>();
+		}
+	}
+
+	protected static HashSet<String> getUDCByParent(String parent){
+		try{
+			if(!connected)
+				connect();
+			HashSet<String> results = new HashSet<>();
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT id FROM lisa.udc WHERE parent = '" + parent + "';");
+			while(rs.next()){
+				results.add(rs.getString("id"));
+			}
+			return results;
+		} catch (Exception e){
+			Common.createLog(e);
+			return new HashSet<String>();
+		}
+	}
+
+	protected static IntArrayList getArticlesForTests(String parent){
+		try{
+			if(!connected)
+				connect();
+			IntArrayList results = new IntArrayList();
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT id FROM lisa.articles WHERE length(udc) < 10 AND udc like \" " +parent +  "%\";");
+			while(rs.next()){
+				results.add(Integer.parseInt(rs.getString("id")));
+			}
+			return results;
+		} catch (Exception e){
+			Common.createLog(e);
+			return new IntArrayList();
+		}
+	}
+
+
 //-----------------------------------------------------------------------
 //------------------------------Группы----------------------------------4
 //-----------------------------------------------------------------------
@@ -490,8 +658,307 @@ public class SQLQuery {
 
 
 //-----------------------------------------------------------------------
-//------------------------------Устаревшие------------------------------5
+//------------------------------URLы------------------------------------5
 //-----------------------------------------------------------------------
+
+	protected static void saveURL(HashSet<String> set){
+		try{
+			if(!connected)
+				connect();
+			for(String i : set){
+				PreparedStatement ps = conn.prepareStatement("INSERT INTO lisa.url (url) VALUES (?)");
+				ps.setString(1, i);
+				ps.executeUpdate();
+				ps.close();
+			}
+			disconnect();
+		} catch (SQLException e){
+			Common.createLog(e);
+		}
+	}
+
+	protected static int getURLCount(){
+		try{
+			if(!connected)
+				connect();
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM lisa.url;");
+			rs.next();
+			return rs.getInt("COUNT(*)");
+		} catch (SQLException e){
+			Common.createLog(e);
+			return -1;
+		}
+	}
+
+	protected static String getURL(int id){
+		try{
+			if(!connected)
+				connect();
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT url FROM lisa.url WHERE id = " + id + ";");
+			rs.next();
+			return rs.getString("url");
+		} catch (SQLException e){
+			Common.createLog(e);
+			return "";
+		}
+	}
+
+	public static void setURLVector(int id, Vector vector){
+		try{
+			if(!connected)
+				connect();
+			PreparedStatement ps = conn.prepareStatement("UPDATE lisa.url SET vector=? WHERE id=?;");
+			ps.setString(1, serialize(vector));
+			ps.setInt(2, id);
+			ps.executeUpdate();
+			ps.close();
+			disconnect();
+		} catch (SQLException e){
+			Common.createLog(e);
+		}
+	}
+
+	public static void setURLText(String url, String text){
+		try{
+			if(!connected)
+				connect();
+			text = text.replaceAll("\\p{Punct}", " ").replaceAll("\\p{javaWhitespace}", " ").replaceAll("\n", " ");
+			while(text.contains("  ")){
+				text = text.replaceAll("  ", " ");
+			}
+			PreparedStatement ps = conn.prepareStatement("UPDATE lisa.url SET text=\"" + text + "\" WHERE url=?;");
+			ps.setString(1, url);
+			ps.executeUpdate();
+			ps.close();
+			disconnect();
+
+		} catch (SQLException e){
+			try{ //Из-за википедии приходится проверять каждый символ, иначе SQL не ест.
+				if(e.toString().contains("com.mysql.jdbc.PacketTooBigException")){ //вызывается 7856
+					throw new Exception();
+				}
+				for(int i = 0; i < text.length(); i++){
+					if(!(((text.charAt(i) >= 'а')&&(text.charAt(i) <= 'я'))||
+							((text.charAt(i) >= 'А')&&(text.charAt(i) <= 'Я'))||
+							((text.charAt(i) >= 'a')&&(text.charAt(i) <= 'z'))||
+							((text.charAt(i) >= 'A')&&(text.charAt(i) <= 'Z'))||
+							((text.charAt(i) >= '0')&&(text.charAt(i) <= '9')))){
+						text = text.substring(0, i) + " " + text.substring(i + 1);
+					}
+
+				}
+				while(text.contains("  ")){
+					text = text.replaceAll("  ", " ");
+				}
+				PreparedStatement ps = conn.prepareStatement("UPDATE lisa.url SET text=\"" + text + "\" WHERE url=?;");
+				ps.setString(1, url);
+				ps.executeUpdate();
+				ps.close();
+				disconnect();
+
+			}catch(Exception i){
+				Common.createLog(i);
+			}
+		}
+	}
+
+	public static Vector getURLVector(String url){
+		try{
+			if(!connected)
+				connect();
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT vector FROM lisa.url WHERE id=\'" + url + "\';");
+			rs.next();
+			return deserialize(rs.getString("vector"));
+		} catch (Exception e){
+			return new Vector();
+		}
+	}
+
+	public static String getURLText(int id){
+		try{
+			if(!connected)
+				connect();
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT text FROM lisa.url WHERE id = " + id + ";");
+			rs.next();
+			return rs.getString("text");
+		} catch (SQLException e){
+			Common.createLog(e);
+			return "";
+		}
+	}
+
+
+
+//-----------------------------------------------------------------------
+//--------------------------------Rocchio-------------------------------6
+//-----------------------------------------------------------------------
+
+	@Deprecated
+	protected static void rocchioSetTermTF(int term, String udc, String parent, long tf){
+		try{
+			if(!connected)
+				connect();
+			PreparedStatement ps = conn.prepareStatement("INSERT INTO rocchio_terms (id, udc, parent, tf) VALUES (?, ?, ?, ?)");
+			ps.setInt(1, term);
+			ps.setString(2, udc);
+			ps.setString(3, parent);
+			ps.setLong(4, tf);
+			ps.executeUpdate();
+			ps.close();
+		} catch(SQLException e){
+			Common.createLog(e);
+		}
+	}
+
+	@Deprecated
+	protected static void rocchioSetTermTF(String values){
+		try{
+			if(!connected)
+				connect();
+			PreparedStatement ps = conn.prepareStatement("INSERT INTO rocchio_terms (id, udc, parent, tf) VALUES " + values + ";");
+			ps.executeUpdate();
+			ps.close();
+		} catch(SQLException e){
+			Common.createLog(e);
+		}
+	}
+
+	@Deprecated
+	protected static void rocchioSetTermIDF(int term, String parent, double idf){
+		try{
+			if(!connected)
+				connect();
+			PreparedStatement ps = conn.prepareStatement("UPDATE rocchio_terms SET idf = " + idf + " WHERE term = " + term + " AND parent = " + parent + ";");
+			ps.executeUpdate();
+			ps.close();
+		} catch(SQLException e){
+			Common.createLog(e);
+		}
+	}
+
+
+	protected static void rocchioSaveUDCWeights(String udc, Vector vector){
+		try{
+			if(!connected)
+				connect();
+			PreparedStatement ps = conn.prepareStatement("INSERT INTO lisa.rocchio_terms (udc, weights) VALUES(?, ?)");
+			ps.setString(1, udc);
+			ps.setString(2, serialize(vector));
+			ps.executeUpdate();
+			ps.close();
+			disconnect();
+		} catch (SQLException e){
+			Common.createLog(e);
+		}
+	}
+
+	protected static Vector rocchioGetUDCWeights(String udc){
+		try{
+			if(connected)
+				disconnect();
+			if(!connected)
+				connect();
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT weights FROM lisa.rocchio_terms WHERE udc=\'" + udc + "\';");
+			rs.next();
+			return deserialize(rs.getString("weights"));
+		} catch (Exception e){
+			return new Vector();
+		}
+	}
+
+//-----------------------------------------------------------------------
+//------------------------------Устаревшие------------------------------7
+//-----------------------------------------------------------------------
+
+
+
+
+	@Deprecated
+	public static void changeURLs(){
+		try{
+			if(!connected)
+				connect();
+			Statement stmt = conn.createStatement();
+			Statement stmt2 = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM lisa.udc WHERE NOT url is NULL");
+			for(int i = 0; i < 1; i++)
+				rs.next();
+			while(rs.next()){
+				String id = rs.getString("id");
+				String[] urls = rs.getString("url").split(";");
+				String url = "";
+				for(String i : urls){
+					try{
+						ResultSet rs2 = stmt2.executeQuery("SELECT id FROM lisa.url WHERE url = '" + i + "';");
+						rs2.next();
+						url += rs2.getInt("id") + ";";
+					}catch(Exception e){
+
+					}
+				}
+
+				PreparedStatement ps = conn.prepareStatement("UPDATE lisa.udc SET url=\"" + url + "\" WHERE id= '" + id + "';");
+				ps.executeUpdate();
+				ps.close();
+			}
+		} catch (SQLException e){
+			Common.createLog(e);
+		}
+	}
+
+	@Deprecated
+	public static boolean setURLsToParents(){
+		boolean oneMoreTime = false;
+		try{
+			if(!connected)
+				connect();
+			HashMap<String, IntOpenHashSet> map = new HashMap<>();
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT id, url FROM lisa.udc");
+			while(rs.next()){
+				String id = rs.getString("id");
+				map.put(id, new IntOpenHashSet());
+				if(rs.getString("url").length() > 2){
+					for(String i : rs.getString("url").split(";")){
+						map.get(id).add(Integer.parseInt(i));
+					}
+				}
+			}
+			rs.close();
+
+			rs = stmt.executeQuery("SELECT * FROM lisa.udc WHERE length(url) > 2;");
+			while(rs.next()){
+				String parent = rs.getString("parent");
+				if(!parent.equals("NULL"))
+					for(String i : rs.getString("url").split(";"))
+						if(map.get(parent).add(Integer.parseInt(i)))
+							oneMoreTime = true;
+			}
+			rs.close();
+
+			for(String key : map.keySet()){
+				String url = "";
+				for(int i : map.get(key)){
+					url += i + ";";
+				}
+				PreparedStatement ps = conn.prepareStatement("UPDATE lisa.udc SET url=\"" + url + "\" WHERE id= '" + key + "';");
+				ps.executeUpdate();
+				ps.close();
+			}
+		} catch (SQLException e){
+			Common.createLog(e);
+		}
+		return oneMoreTime;
+	}
+
+
+
+
 
 
 
