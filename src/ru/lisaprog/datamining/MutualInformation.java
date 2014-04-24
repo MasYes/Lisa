@@ -4,6 +4,8 @@ import it.unimi.dsi.fastutil.ints.Int2DoubleOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 
 import ru.lisaprog.objects.Vector;
+import ru.lisaprog.sql.SQLQuery;
+import ru.lisaprog.articles.yandex.ArticleYandex;
 
 import java.util.HashMap;
 
@@ -12,11 +14,22 @@ import java.util.HashMap;
  */
 public class MutualInformation {
 
+	public static void test(){
+		MutualInformation mi = new MutualInformation();
+		String[] udcs = "510.2;510.3;510.6;511;512;514.7;515.1;517.9;519.1;519.2;519.6;519.7;519.83;519.85;".split(";");
+		for(String udc : udcs){
+			for(ArticleYandex articleYandex : SQLQuery.getArticlesYandex("udc = " + udc)){
+				mi.addVector(udc, articleYandex.vector);
+			}
+		}
+		mi.calculateMI();
+	}
+
 	private double log2Value = Math.log(2);
 
-	HashMap<String, Vector> vectors;
-	HashMap<String, Integer> sizesOfClasses;
-	HashMap<String, Int2DoubleOpenHashMap> mutualInformations;
+	private HashMap<String, Vector> vectors;
+	private HashMap<String, Integer> sizesOfClasses;
+	private HashMap<String, Int2DoubleOpenHashMap> mutualInformations;
 	double N = 0;
 
 	public MutualInformation(){
@@ -62,7 +75,7 @@ public class MutualInformation {
 						N11/N*log2((N * N11)/(N1_ * N_1)) +
 						N01/N*log2((N * N01)/(N0_ * N_1)) +
 						N10/N*log2((N * N10)/(N1_ * N_0)) +
-						N00/N*log2((N * N00)/(N0_ * N_0)); //Зато понятно :)
+						N00/N*log2((N * N00) / (N0_ * N_0)); //Зато понятно :)
 				mutualInformations.get(udc).put(i, MI);
 			}
 		}
