@@ -1,10 +1,6 @@
-import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
-import lisa.*;
+import ru.lisaprog.classifiers.*;
 
 import java.lang.* ;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 
 
 /**
@@ -24,6 +20,7 @@ public class Main {
 		//MulticlassSVM.test();
 		//LDA lda = new LDA(1, 0.01, 50);
 		TopicClassifier.test();
+//		SaveArticlesYandex.saveArticles();
 	}
 }
 
